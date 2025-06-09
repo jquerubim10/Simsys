@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="create-news-tables" author="Renan Peres">
+        <createTable tableName="BUILDER_SCREEN">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"
+                             primaryKeyName="builder_screen_id_pk"
+                             unique="true"
+                             nullable="false"/>
+            </column>
+            <column name="TITLE" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ICON" type="varchar(80)" />
+            <column name="TABLE_NAME" type="varchar(80)" />
+            <column name="DATE_DISABLED" type="varchar(80)" />
+            <column name="DATE_CREATED" type="varchar(80)" />
+
+            <column name="ACTIVE" type="boolean" defaultValue="1"/>
+        </createTable>
+
+        <createTable tableName="BUILDER_DIV">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"
+                             primaryKeyName="builder_div_id_pk"
+                             unique="true"
+                             nullable="false"/>
+            </column>
+            <column name="TITLE" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SCREEN_ID" type="bigint"/>
+            <column name="ACTIVE" type="boolean" defaultValue="1"/>
+        </createTable>
+
+        <createTable tableName="BUILDER_FIELD">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"
+                             primaryKeyName="builder_field_id_pk"
+                             unique="true"
+                             nullable="false"/>
+            </column>
+            <column name="PLACEHOLDER" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LABEL" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FORM_CONTROL_NAME" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LINES" type="bigint" />
+            <column name="VALUE" type="varchar(80)" />
+            <column name="CSS" type="varchar(80)" />
+            <column name="CLASS_NAME" type="varchar(80)" />
+            <column name="COLUMN_NAME" type="varchar(80)" />
+            <column name="MASK" type="varchar(80)" />
+
+            <column name="INFO_SENSITIVE" type="boolean" defaultValue="0"/>
+            <column name="SEARCHABLE" type="boolean" defaultValue="0"/>
+            <column name="EDITABLE" type="boolean" defaultValue="0"/>
+            <column name="VISIBLE" type="boolean" defaultValue="0"/>
+
+            <column name="VALIDATOR_REQUIRED" type="boolean" defaultValue="0"/>
+            <column name="VALIDATOR_MIN" type="bigint"/>
+            <column name="VALIDATOR_MAX" type="bigint"/>
+            <column name="VALIDATOR_MESSAGE" type="varchar(100)"/>
+
+            <column name="DIV_ID" type="bigint"/>
+            <column name="SCREEN_ID" type="bigint"/>
+
+            <column name="ACTIVE" type="boolean" defaultValue="1"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

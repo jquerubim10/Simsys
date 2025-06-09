@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="dbmsAutoIncrement" value="mysql, mssql, h2, derby, sqlite, sybase, asany"/>
+    <property name="dbmsSequence" value="db2, firebird, hypersql, informix, oracle, postgresql"/>
+
+    <property name="autoIncrement" value="true" dbms="${dbmsAutoIncrement}"/>
+    <property name="autoIncrement" value="false" dbms="${dbmsSequence}"/>
+
+    <!-- 1.0.0 -->
+    <include file="db/changelog/db.changelog-1.0.0.xml"/>
+    <!-- 1.0.1 -->
+    <include file="db/changelog/db.changelog-1.0.1.xml"/>
+    <!-- 1.0.2 -->
+    <include file="db/changelog/db.changelog-1.0.2.xml"/>
+    <!-- 1.0.3 -->
+    <include file="db/changelog/db.changelog-1.0.3.xml"/>
+    <!-- 1.0.4 -->
+    <include file="db/changelog/db.changelog-1.0.4.xml"/>
+    <!-- 1.0.5 -->
+    <include file="db/changelog/db.changelog-1.0.5.xml"/>
+    <!-- 1.0.6 -->
+    <include file="db/changelog/db.changelog-1.0.6.xml"/>
+    <!-- 1.0.7 -->
+    <include file="db/changelog/db.changelog-1.0.7.xml"/>
+    <!-- 1.0.8 -->
+    <include file="db/changelog/db.changelog-1.0.8.xml"/>
+    <!-- 1.0.9 -->
+    <include file="db/changelog/db.changelog-1.0.9.xml"/>
+    <!-- 1.0.11 -->
+    <include file="/db/changelog/db.changelog-1.0.11.xml"/>
+    <!-- 1.0.12 -->
+    <include file="/db/changelog/db.changelog-1.0.12.xml"/>
+    <!-- 1.0.13 -->
+    <include file="/db/changelog/db.changelog-1.0.13.xml"/>
+    <!-- 1.0.14
+    <include file="/db/changelog/db.changelog-1.0.14.xml"/>-->
+    <!-- 1.0.15 -->
+    <include file="/db/changelog/db.changelog-1.0.15.xml"/>
+    <!-- 1.0.16 -->
+    <include file="/db/changelog/db.changelog-1.0.16.xml"/>
+    <!-- 1.0.17 -->
+    <include file="/db/changelog/db.changelog-1.0.17.xml"/>
+    <!-- 1.0.18 -->
+    <include file="/db/changelog/db.changelog-1.0.18.xml"/>
+    <!-- 1.0.19 -->
+    <include file="/db/changelog/db.changelog-1.0.19.xml"/>
+    <!-- 1.0.20 -->
+    <include file="/db/changelog/db.changelog-1.0.20.xml"/>
+    <!-- 1.0.21 -->
+    <include file="/db/changelog/db.changelog-1.0.21.xml"/>
+    <!-- 1.0.22 -->
+    <include file="/db/changelog/db.changelog-1.0.22.xml"/>
+    <!-- 1.0.23 -->
+    <include file="/db/changelog/db.changelog-1.0.23.xml"/>
+    <!-- 1.0.24 -->
+    <include file="/db/changelog/db.changelog-1.0.24.xml"/>
+    <!-- 1.0.25 -->
+    <include file="/db/changelog/db.changelog-1.0.25.xml"/>
+    <!-- 1.0.26 -->
+    <include file="/db/changelog/db.changelog-1.0.26.xml"/>
+    <!-- 1.0.27 -->
+    <include file="/db/changelog/db.changelog-1.0.27.xml"/>
+    <!-- 1.0.28 -->
+    <include file="/db/changelog/db.changelog-1.0.28.xml"/>
+    <!-- 1.0.29 -->
+    <include file="/db/changelog/db.changelog-1.0.29.xml"/>
+    <!-- 1.0.30 -->
+    <include file="/db/changelog/db.changelog-1.0.30.xml"/>
+    <!-- 1.0.31 -->
+    <include file="/db/changelog/db.changelog-1.0.31.xml"/>
+    <!-- 1.0.32 -->
+    <include file="/db/changelog/db.changelog-1.0.32.xml"/>
+    <!-- 1.0.33 -->
+    <include file="/db/changelog/db.changelog-1.0.33.xml"/>
+    <!-- 1.0.34 -->
+    <include file="/db/changelog/db.changelog-1.0.34.xml"/>
+    <!-- 1.0.35 -->
+    <include file="/db/changelog/db.changelog-1.0.35.xml"/>
+    <!-- 1.0.36 -->
+    <include file="/db/changelog/db.changelog-1.0.36.xml"/>
+</databaseChangeLog>

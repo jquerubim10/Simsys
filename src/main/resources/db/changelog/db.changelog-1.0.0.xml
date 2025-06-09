@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="create-new-sidebar-table" author="Renan Peres">
+        <createTable tableName="FUSE_NAVIGATION_ITEM">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"
+                             primaryKeyName="fuse_navigation_item_id_pk"
+                             unique="true"
+                             nullable="false"/>
+            </column>
+            <column name="ID_NAME" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TITLE" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SUBTITLE" type="varchar(80)" />
+            <column name="TOOLTIP" type="varchar(80)" />
+            <column name="LINK" type="varchar(80)" />
+            <column name="FRAGMENT" type="varchar(80)" />
+            <column name="QUERY_PARAMS" type="varchar(80)" />
+            <column name="QUERY_PARAMS_HANDLING" type="varchar(80)" />
+            <column name="META" type="varchar(80)" />
+            <column name="ICON" type="varchar(80)" />
+            <column name="FUNCTIONS" type="varchar(80)" />
+            <column name="TARGET" type="varchar(80)" />
+            <column name="TYPE" type="varchar(80)" />
+            <column name="CLASSES" type="varchar(80)" />
+            <column name="BADGE" type="varchar(80)" />
+
+            <column name="PRESERVE_FRAGMENT" type="boolean" defaultValue="0"/>
+            <column name="EXTERNAL_LINK" type="boolean" defaultValue="0"/>
+            <column name="EXACT_MATCH" type="boolean" defaultValue="0"/>
+            <column name="IS_ACTIVE_MATCH_OPTIONS" type="boolean" defaultValue="0"/>
+            <column name="HIDDEN" type="boolean" defaultValue="0"/>
+            <column name="ACTIVE" type="boolean" defaultValue="0"/>
+            <column name="DISABLED" type="boolean" defaultValue="0"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="insert-base-menus" author="renan.peres">
+        <insert tableName="FUSE_NAVIGATION_ITEM">
+            <column name="ID_NAME" value="admin" />
+            <column name="TITLE" value="Admin" />
+            <column name="TOOLTIP" value="Admin" />
+            <column name="ICON" value="lock-closed" />
+            <column name="LINK" value="/admin" />
+            <column name="TYPE" value="basic" />
+            <column name="TARGET" value="_self" />
+            <column name="META" value="999999" />
+        </insert>
+
+        <insert tableName="FUSE_NAVIGATION_ITEM">
+            <column name="ID_NAME" value="home" />
+            <column name="TITLE" value="Home" />
+            <column name="TOOLTIP" value="Home" />
+            <column name="ICON" value="home" />
+            <column name="LINK" value="/home" />
+            <column name="TYPE" value="basic" />
+            <column name="TARGET" value="_self" />
+            <column name="META" value="0" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>
