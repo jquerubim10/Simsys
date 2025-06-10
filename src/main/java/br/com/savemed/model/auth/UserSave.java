@@ -8,6 +8,10 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collection;
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -15,7 +19,7 @@ import java.util.Date;
 @Table(name = "USUARIO")
 @NoArgsConstructor
 @EqualsAndHashCode
-public class UserSave implements Serializable {
+public class UserSave implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
 
@@ -242,5 +246,41 @@ public class UserSave implements Serializable {
 
     @Column(name = "NAO_AUDITAR_FATURA")
     private Integer naoAuditdarFatura;
+
+    // MÉTODOS DA INTERFACE UserDetails
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new ArrayList<>(); // Retorna uma lista vazia de permissões por enquanto
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.logon;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.desativado == null || this.desativado == 0;
+    }
 
 }

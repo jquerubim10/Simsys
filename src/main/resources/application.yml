@@ -6,3 +6,7 @@ spring:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+api:
+  security:
+    token:
+      secret: bXlTVjQzWEt2YjZqM3hUN2JGNjRUbnJVc3dYNnI5dDEyMzQ1Njc4OQ==
