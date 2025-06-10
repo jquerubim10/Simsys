@@ -1,6 +1,5 @@
 package br.com.savemed.repositories;
 
-import br.com.savemed.model.FuseNavigationItem;
 import br.com.savemed.model.Panel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

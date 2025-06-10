@@ -13,9 +13,16 @@ public class JpaUserDetailsService implements UserDetailsService {
     @Autowired
     private UserSaveRepository userSaveRepository;
 
+    /**
+     * O Spring Security chama este método quando o AuthenticationManager precisa
+     * validar um usuário. Nós simplesmente delegamos a busca ao nosso repositório.
+     */
     @Override
     public UserDetails loadUserByUsername(String logon) throws UsernameNotFoundException {
-        // Agora o repositório retorna a entidade UserDetails que implementamos em UserSave
-        return userSaveRepository.findByLogon(logon);
+        var user = userSaveRepository.findByLogon(logon);
+        if (user == null) {
+            throw new UsernameNotFoundException("Usuário com logon '" + logon + "' não encontrado.");
+        }
+        return user;
     }
 }

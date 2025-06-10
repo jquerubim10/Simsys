@@ -1,8 +1,6 @@
 package br.com.savemed.services.savemed;
 
-import br.com.savemed.model.FuseNavigationItem;
 import br.com.savemed.model.savemed.CentroCustoSavemed;
-import br.com.savemed.repositories.FuseNavigationItemRepository;
 import br.com.savemed.repositories.savemed.CentroCustoSavemedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
