@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface NavigationItemRepository extends JpaRepository<NavigationItem, Long> {
 
@@ -21,15 +23,15 @@ public interface NavigationItemRepository extends JpaRepository<NavigationItem, 
      * @param userId ID do usuário legado (tipo Integer).
      * @return Uma página de itens de navegação visíveis para o usuário.
      */
-    @Query(value = "SELECT n FROM NavigationItem n WHERE n.parent IS NULL AND n.active = true AND " +
-            "(" +
-            "   EXISTS (SELECT 1 FROM PermissaoAdicionalUsuario pau WHERE pau.usuario.usuario = :userId AND pau.idRecurso = n.id AND pau.tipoRecurso = 'NAVIGATION_ITEM' AND pau.podeVisualizar = true)" +
-            "   OR " +
-            "   EXISTS (SELECT 1 FROM Permissao p JOIN p.perfil.usuarios up WHERE up.usuario.usuario = :userId AND p.idRecurso = n.id AND p.tipoRecurso = 'NAVIGATION_ITEM' AND p.podeVisualizar = true)" +
-            ") AND NOT EXISTS (SELECT 1 FROM RestricaoEspecificaUsuario rsu WHERE rsu.usuario.usuario = :userId AND rsu.idRecurso = n.id AND rsu.tipoRecurso = 'NAVIGATION_ITEM' AND rsu.negarVisualizar = true)" +
+    @Query("SELECT DISTINCT n FROM NavigationItem n " +
+            "LEFT JOIN PermissaoAdicionalUsuario pau ON pau.idRecurso = n.id AND pau.tipoRecurso = 'NAVIGATION_ITEM' AND pau.usuario.usuario = :userId AND pau.podeVisualizar = true " +
+            "LEFT JOIN Permissao p ON p.idRecurso = n.id AND p.tipoRecurso = 'NAVIGATION_ITEM' AND p.podeVisualizar = true " +
+            "LEFT JOIN p.perfil.usuarios up ON up.usuario.usuario = :userId " +
+            "LEFT JOIN RestricaoEspecificaUsuario rsu ON rsu.idRecurso = n.id AND rsu.tipoRecurso = 'NAVIGATION_ITEM' AND rsu.usuario.usuario = :userId AND rsu.negarVisualizar = true " +
+            "WHERE n.parent IS NULL AND n.active = true " +
+            "AND (pau.id IS NOT NULL OR up.id IS NOT NULL) AND rsu.id IS NULL " +
             "ORDER BY n.title ASC")
     Page<NavigationItem> findVisibleMenusForUser(Pageable pageable, @Param("userId") Integer userId);
-
 
     /**
      * Busca os itens de menu FILHOS de um item pai específico, aplicando a mesma lógica de permissão.
@@ -38,16 +40,20 @@ public interface NavigationItemRepository extends JpaRepository<NavigationItem, 
      * @param userId ID do usuário legado (tipo Integer).
      * @return Uma página de itens de navegação filhos visíveis para o usuário.
      */
-    @Query(value = "SELECT n FROM NavigationItem n WHERE n.parent.id = :parentId AND n.active = true AND " +
-            "(" +
-            "   EXISTS (SELECT 1 FROM PermissaoAdicionalUsuario pau WHERE pau.usuario.usuario = :userId AND pau.idRecurso = n.id AND pau.tipoRecurso = 'NAVIGATION_ITEM' AND pau.podeVisualizar = true)" +
-            "   OR " +
-            "   EXISTS (SELECT 1 FROM Permissao p JOIN p.perfil.usuarios up WHERE up.usuario.usuario = :userId AND p.idRecurso = n.id AND p.tipoRecurso = 'NAVIGATION_ITEM' AND p.podeVisualizar = true)" +
-            ") AND NOT EXISTS (SELECT 1 FROM RestricaoEspecificaUsuario rsu WHERE rsu.usuario.usuario = :userId AND rsu.idRecurso = n.id AND rsu.tipoRecurso = 'NAVIGATION_ITEM' AND rsu.negarVisualizar = true)" +
+    @Query("SELECT DISTINCT n FROM NavigationItem n " +
+            "LEFT JOIN PermissaoAdicionalUsuario pau ON pau.idRecurso = n.id AND pau.tipoRecurso = 'NAVIGATION_ITEM' AND pau.usuario.usuario = :userId AND pau.podeVisualizar = true " +
+            "LEFT JOIN Permissao p ON p.idRecurso = n.id AND p.tipoRecurso = 'NAVIGATION_ITEM' AND p.podeVisualizar = true " +
+            "LEFT JOIN p.perfil.usuarios up ON up.usuario.usuario = :userId " +
+            "LEFT JOIN RestricaoEspecificaUsuario rsu ON rsu.idRecurso = n.id AND rsu.tipoRecurso = 'NAVIGATION_ITEM' AND rsu.usuario.usuario = :userId AND rsu.negarVisualizar = true " +
+            "WHERE n.parent.id = :parentId AND n.active = true " +
+            "AND (pau.id IS NOT NULL OR up.id IS NOT NULL) AND rsu.id IS NULL " +
             "ORDER BY n.title ASC")
     Page<NavigationItem> findVisibleChildrenForUser(Pageable pageable, @Param("parentId") Long parentId, @Param("userId") Integer userId);
 
-    // O método disableMenu foi removido daqui. É uma prática melhor que essa lógica
-    // de negócio (desabilitar um menu) fique na camada de Serviço, que pode então
-    // chamar o repository.save(entity) para persistir a alteração.
+    default Optional<NavigationItem> findByIdWithLogging(Long id) {
+        System.out.println("Buscando ID: " + id + " - Tipo: " + id.getClass());
+        Optional<NavigationItem> result = findById(id);
+        System.out.println("Resultado encontrado: " + result.isPresent());
+        return result;
+    }
 }

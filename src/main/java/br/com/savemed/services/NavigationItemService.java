@@ -57,11 +57,23 @@ public class NavigationItemService {
      */
     public NavigationItem findByIdForUser(Long id, Integer userId) {
         logger.info("Buscando item de menu ID: " + id + " para o usuário ID: " + userId);
+
+        // Verifica permissão primeiro
         if (!permissionService.canView(userId, id, "NAVIGATION_ITEM")) {
             throw new AccessDeniedException("Acesso negado: você não tem permissão para visualizar este item.");
         }
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Nenhum registro encontrado para este ID!"));
+
+        try {
+            // Tenta buscar o item
+            return repository.findById(id)
+                    .orElseThrow(() -> {
+                        logger.warning("Item de menu não encontrado para o ID: " + id);
+                        return new ResourceNotFoundException("Nenhum registro encontrado para este ID!");
+                    });
+        } catch (Exception e) {
+            logger.severe("Erro ao buscar item de menu ID: " + id + " - " + e.getMessage());
+            throw new ResourceNotFoundException("Erro ao buscar item de menu"+ e.getMessage());
+        }
     }
 
     // --- MÉTODOS DE ESCRITA SEGUROS ---

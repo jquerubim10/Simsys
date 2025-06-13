@@ -1,34 +1,37 @@
 package br.com.savemed.model;
 
+import br.com.savemed.model.builder.BuilderScreen;
 import br.com.savemed.model.enums.Target;
 import br.com.savemed.model.enums.Types;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "FUSE_NAVIGATION_ITEM")
+@Getter
+@Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = {"parent", "children", "screen"})  // Evita recursão infinita no toString()
 public class NavigationItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    // Identificação
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false, columnDefinition = "BIGINT")
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name = "ID_NAME", nullable = false)
     private String idName;
 
+    // Informações básicas
     @Column(name = "TITLE", nullable = false)
     private String title;
 
@@ -38,6 +41,7 @@ public class NavigationItem implements Serializable {
     @Column(name = "TOOLTIP")
     private String tooltip;
 
+    // Navegação
     @Column(name = "LINK")
     private String link;
 
@@ -50,6 +54,7 @@ public class NavigationItem implements Serializable {
     @Column(name = "QUERY_PARAMS_HANDLING")
     private String queryParamsHandling;
 
+    // Metadados
     @Column(name = "META")
     private String meta;
 
@@ -57,9 +62,10 @@ public class NavigationItem implements Serializable {
     private String icon;
 
     @Column(name = "FUNCTIONS")
-    @JsonProperty(namespace = "FUNCTION")
+    @JsonProperty("FUNCTION")
     private String function;
 
+    // Tipos e classes
     @Column(name = "TARGET")
     @Enumerated(EnumType.STRING)
     private Target target;
@@ -68,15 +74,13 @@ public class NavigationItem implements Serializable {
     @Enumerated(EnumType.STRING)
     private Types type;
 
-    @Column(name = "SCREEN_ID")
-    private String screenId;
-
     @Column(name = "CLASSES")
     private String classes;
 
     @Column(name = "BADGE")
     private String badge;
 
+    // Flags booleanas
     @Column(name = "PRESERVE_FRAGMENT", columnDefinition = "boolean default false")
     private boolean preserveFragment;
 
@@ -90,13 +94,10 @@ public class NavigationItem implements Serializable {
     private boolean exactMatch;
 
     @Column(name = "IS_CHILDREN_SIDEBAR", columnDefinition = "boolean default false")
-    private boolean isChildrenSidebar;
-
-    @Column(name = "ID_SIDEBAR_MENU")
-    private Long idSidebarMenu;
+    private boolean childrenSidebar;
 
     @Column(name = "IS_ACTIVE_MATCH_OPTIONS", columnDefinition = "boolean default false")
-    private boolean isActiveMatchOptions;
+    private boolean activeMatchOptions;
 
     @Column(name = "HIDDEN", columnDefinition = "boolean default false")
     private boolean hidden;
@@ -107,15 +108,40 @@ public class NavigationItem implements Serializable {
     @Column(name = "DISABLED", columnDefinition = "boolean default false")
     private boolean disabled;
 
-    @PostPersist
-    private void setMeta() {
-        this.setMeta(this.getId().toString());
-    }
-
+    // Relacionamentos
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PARENT")
-    private NavigationItem parent; // O campo para o qual o setParent() será gerado
+    @JsonBackReference("navigation-parent")
+    private NavigationItem parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("navigation-parent")
     private List<NavigationItem> children;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SCREEN_ID")
+    @JsonIgnore
+    private BuilderScreen screen;
+
+    @PostPersist
+    private void postPersist() {
+        if (this.meta == null) {
+            this.meta = String.valueOf(this.id);
+        }
+    }
+
+    // Métodos auxiliares (opcionais)
+    public boolean isRootItem() {
+        return parent == null;
+    }
+
+    public void addChild(NavigationItem child) {
+        children.add(child);
+        child.setParent(this);
+    }
+
+    public void removeChild(NavigationItem child) {
+        children.remove(child);
+        child.setParent(null);
+    }
 }

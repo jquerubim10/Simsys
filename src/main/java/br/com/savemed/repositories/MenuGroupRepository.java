@@ -1,6 +1,5 @@
 package br.com.savemed.repositories;
 
-
 import br.com.savemed.model.builder.BuilderScreen;
 import br.com.savemed.model.builder.MenuGroup;
 import org.springframework.data.domain.Page;
@@ -18,9 +17,10 @@ public interface MenuGroupRepository extends JpaRepository<MenuGroup, Long> {
     @Query("update MenuGroup mg set mg.active = false where mg.id = :id")
     void disableGroup(@Param("id") Long id);
 
-    @Query("select mg from MenuGroup mg where mg.active = true order by mg.title asc")
-    Page<MenuGroup> findMenuGroupsByActive(Pageable pageable);
-
-    @Query("select bs from BuilderScreen bs where bs.groupId = :id")
+    /**
+     * MÉTODO CORRIGIDO: Busca telas (BuilderScreen) que pertencem a um grupo específico.
+     * A query agora usa o relacionamento de objeto 'menuGroup' em vez do campo 'groupId'.
+     */
+    @Query("select bs from BuilderScreen bs where bs.menuGroup.id = :id")
     Page<BuilderScreen> findScreenByGroup(Pageable pageable, @Param("id") Long id);
 }

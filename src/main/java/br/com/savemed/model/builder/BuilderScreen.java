@@ -1,10 +1,12 @@
 package br.com.savemed.model.builder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +15,7 @@ import java.util.Date;
 @Setter
 @Entity
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 @Table(name = "BUILDER_SCREEN")
 public class BuilderScreen implements Serializable {
 
@@ -23,18 +25,35 @@ public class BuilderScreen implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "GROUP_ID")
-    private Long groupId;
+    // --- RELACIONAMENTO CORRIGIDO ---
+    // O campo groupId foi substituído por um relacionamento de objeto.
+    // O JPA cuidará da coluna GROUP_ID no banco.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "GROUP_ID")
+    private MenuGroup menuGroup;
 
     private String title;
     private String icon;
 
+    // --- DATAS CORRIGIDAS ---
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATE_DISABLED")
-    private String dateDisabled;
+    private Date dateDisabled;
 
-    @Column(name = "DATE_CREATED")
-    private String dateCreated;
+    // A anotação @CreationTimestamp cuida de preencher a data automaticamente
+    // na inserção, substituindo a necessidade do método @PrePersist.
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DATE_CREATED", updatable = false)
+    private Date dateCreated;
 
+
+    // --- CAMPO PROBLEMÁTICO REMOVIDO ---
+    // O campo idSidebarMenu foi removido para quebrar o ciclo de dependência com NavigationItem.
+    // A responsabilidade de saber qual tela um item de menu abre é do NavigationItem.
+
+
+    // --- OUTROS CAMPOS MANTIDOS ---
     @Column(name = "TABLE_NAME")
     private String tableName;
 
@@ -50,21 +69,27 @@ public class BuilderScreen implements Serializable {
     @Column(name = "SCREEN_LOGIN")
     private boolean screenLogin;
 
+    @Lob // Para textos longos, é bom usar @Lob
     @Column(name = "PREVIEW_OBJECT_TXT")
     private String previewObjectText;
 
+    @Lob
     @Column(name = "PRE_SAVE_TXT")
     private String preSaveListTxt;
 
+    @Lob
     @Column(name = "PRE_SAVE_FUNCTION_TXT")
     private String preSaveFunctionListTxt;
 
+    @Lob
     @Column(name = "DIV_JSON")
     private String divJson;
 
+    @Lob
     @Column(name = "PRO_SAVE_TXT")
     private String proSaveListTxt;
 
+    @Lob
     @Column(name = "WHERE_CLAUSE")
     private String whereClause;
 
@@ -74,26 +99,25 @@ public class BuilderScreen implements Serializable {
     @Column(name = "EXECUTE_OPTION")
     private boolean executeOption;
 
-    @Column(name = "ACTIVE", columnDefinition = "boolean default false")
-    private boolean active;
+    @Column(name = "ACTIVE")
+    private boolean active = false;
 
-    @Column(name = "COMPONENT_S", columnDefinition = "boolean default false")
-    private boolean componentS;
+    @Column(name = "COMPONENT_S")
+    private boolean componentS = false;
 
-    @Column(name = "HISTORY_S", columnDefinition = "boolean default false")
-    private boolean historyC;
+    @Column(name = "HISTORY_S")
+    private boolean historyC = false;
 
-    @Column(name = "ID_SIDEBAR_MENU")
-    private Long idSidebarMenu;
+    @Column(name = "CHILDREN_SCREEN")
+    private boolean childrenScreen = false;
 
-    @Column(name = "CHILDREN_SCREEN", columnDefinition = "boolean default false")
-    private boolean childrenScreen;
-
-    @Column(name = "LIST_C", columnDefinition = "boolean default false")
-    private boolean listC;
+    @Column(name = "LIST_C")
+    private boolean listC = false;
 
     @PrePersist
     private void updateDate() {
-        this.setDateCreated(new Date().toString());
+        // Atribui um novo objeto Date ao campo dateCreated, que também é do tipo Date.
+        this.setDateCreated(new Date());
     }
+
 }

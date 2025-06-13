@@ -26,6 +26,10 @@ public class PerfilUsuario {
     @Column(name = "ATUALIZACAO", nullable = false)
     private String atualizacao;
 
+    // --- ADICIONE ESTA NOVA SEÇÃO ---
+    @OneToMany(mappedBy = "perfil")
+    private Set<Permissao> permissoes;
+
     // --- ADICIONE ESTA SEÇÃO ---
     // Mapeamento para o outro lado do relacionamento com UsuarioPerfil.
     // 'mappedBy = "perfil"' diz ao JPA: "A gestão deste relacionamento
