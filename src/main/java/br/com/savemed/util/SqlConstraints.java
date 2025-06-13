@@ -327,7 +327,7 @@ public class SqlConstraints {
                                     ",G.Quantidade AS QUANT_RECURSO\n" +
                                     ",K.FUNCAO AS FUNCAO\n" +
                                     ",L.NOME + ' - ' + CAST(L.MEDICO AS VARCHAR)  AS PROFISSIONAL_EQUIPE\n" +
-                                    ",c.DESCRICAO AS CONVENIO"+
+                                    ",C.DESCRICAO AS CONVENIO"+
                                     "FROM AGENDAMENTO A \n" +
                                     "INNER JOIN CENTROCUSTO B ON A.CENTROCUSTOID=B.CENTROCUSTO\n" +
                                     "LEFT  JOIN CONVENIOS C ON A.CONVENIOID=C.CONVENIO \n" +

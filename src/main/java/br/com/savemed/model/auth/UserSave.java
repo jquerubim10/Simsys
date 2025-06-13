@@ -247,6 +247,9 @@ public class UserSave implements Serializable, UserDetails {
     @Column(name = "NAO_AUDITAR_FATURA")
     private Integer naoAuditdarFatura;
 
+    @Transient
+    private String token;
+
     // MÉTODOS DA INTERFACE UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

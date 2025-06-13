@@ -3,6 +3,7 @@ package br.com.savemed.controllers.sign;
 import br.com.savemed.model.auth.UserSave;
 import br.com.savemed.model.auth.UtilLogin;
 import br.com.savemed.model.file.SignedDocs;
+import br.com.savemed.services.TokenService;
 import br.com.savemed.services.sign.SignService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,6 +31,8 @@ public class SignController {
     public SignController(SignService service) {
         this.service = service;
     }
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping(value = "login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Login", description = "Login com logon e senha", tags = {"sign"},
@@ -44,6 +47,12 @@ public class SignController {
     public ResponseEntity<UserSave> login(@RequestBody UtilLogin logon) {
 
         UserSave user = service.findByUserPass(logon.getLogon(), logon.getPassword());
+
+        var token = tokenService.generateToken(user);
+
+        // 2. SETA O TOKEN NO CAMPO TRANSIENT DO OBJETO
+        user.setToken(token);
+
         return ResponseEntity.ok(user);
     }
 
@@ -79,6 +88,7 @@ public class SignController {
 
         UserSave user = service.findByUserPass(logon.getLogon(), logon.getPassword());
         //service.signUser(user, pfxPsword, file);
+
         return ResponseEntity.ok(user);
     }
 
