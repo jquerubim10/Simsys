@@ -1,6 +1,6 @@
 package br.com.savemed.util;
 
-import br.com.savemed.dto.message.EntityReference;
+import br.com.savemed.model.message.EntityReference;
 import br.com.savemed.model.scheduler.Agendamento;
 import br.com.savemed.model.scheduler.ConfiguracaoNotificacao;
 import br.com.savemed.model.ws.SendMessageRequest;
@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class MessageSenderHelper {

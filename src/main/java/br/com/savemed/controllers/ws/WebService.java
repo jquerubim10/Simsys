@@ -1,11 +1,8 @@
 package br.com.savemed.controllers.ws;
 
-import br.com.savemed.dto.message.EntityReference;
+import br.com.savemed.model.message.EntityReference;
 import br.com.savemed.model.enums.CanalType;
-import br.com.savemed.model.enums.DirecaoType;
-import br.com.savemed.model.enums.StatusMensagem;
 import br.com.savemed.model.enums.TipoMensagem;
-import br.com.savemed.model.message.Mensagem;
 import br.com.savemed.model.ws.*;
 import br.com.savemed.services.UserSaveService;
 import br.com.savemed.services.message.GenericMessageSender;
@@ -22,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -31,9 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 

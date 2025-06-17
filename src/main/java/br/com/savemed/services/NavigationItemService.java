@@ -64,12 +64,10 @@ public class NavigationItemService {
         }
 
         try {
+            NavigationItem item = repository.findByIdWithRelations(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Item não encontrado"));
             // Tenta buscar o item
-            return repository.findById(id)
-                    .orElseThrow(() -> {
-                        logger.warning("Item de menu não encontrado para o ID: " + id);
-                        return new ResourceNotFoundException("Nenhum registro encontrado para este ID!");
-                    });
+            return item;
         } catch (Exception e) {
             logger.severe("Erro ao buscar item de menu ID: " + id + " - " + e.getMessage());
             throw new ResourceNotFoundException("Erro ao buscar item de menu"+ e.getMessage());

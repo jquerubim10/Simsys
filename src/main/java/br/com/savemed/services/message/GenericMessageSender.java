@@ -1,7 +1,7 @@
 package br.com.savemed.services.message;
 
 import br.com.savemed.controllers.ws.WebServiceClient;
-import br.com.savemed.dto.message.EntityReference;
+import br.com.savemed.model.message.EntityReference;
 import br.com.savemed.model.enums.CanalType;
 import br.com.savemed.model.enums.DirecaoType;
 import br.com.savemed.model.enums.StatusMensagem;

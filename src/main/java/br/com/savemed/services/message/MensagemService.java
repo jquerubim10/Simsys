@@ -1,8 +1,8 @@
 package br.com.savemed.services.message;
 
-import br.com.savemed.dto.message.ContatoDTO;
-import br.com.savemed.dto.message.EntityReference;
-import br.com.savemed.dto.message.MensagemRequestDTO;
+import br.com.savemed.model.dto.message.ContatoDTO;
+import br.com.savemed.model.message.EntityReference;
+import br.com.savemed.model.dto.message.MensagemRequestDTO;
 import br.com.savemed.exceptions.ResourceNotFoundException;
 import br.com.savemed.model.enums.*;
 import br.com.savemed.model.message.Mensagem;
@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import br.com.savemed.dto.message.MensagemChatDTO;
+import br.com.savemed.model.dto.message.MensagemChatDTO;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;

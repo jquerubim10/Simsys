@@ -1,6 +1,6 @@
 package br.com.savemed.model.scheduler;
 
-import br.com.savemed.dto.message.EntityReference;
+import br.com.savemed.model.message.EntityReference;
 import br.com.savemed.model.enums.*;
 import br.com.savemed.model.message.Mensagem;
 import br.com.savemed.model.ws.SendMessageRequest;
@@ -10,7 +10,6 @@ import br.com.savemed.services.scheduler.AgendamentoService;
 import br.com.savemed.services.scheduler.ConfiguracaoNotificacaoService;
 import br.com.savemed.services.scheduler.NotificacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

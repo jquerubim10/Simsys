@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/builder-screen") // Endpoint mais genérico
+@RequestMapping("/api/v1/builder-screen")
 @Tag(name = "Builder Screen", description = "Endpoints para Gerenciar Telas Dinâmicas")
 public class BuilderScreenController {
 

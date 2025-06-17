@@ -32,7 +32,7 @@ public class BuilderScreenService {
     private BuilderFieldRepository builderFieldRepository;
 
     @Autowired
-    private PermissionService permissionService; // Injetando o serviço de permissão
+    private PermissionService permissionService;
 
     private final Logger logger = Logger.getLogger(BuilderScreenService.class.getName());
 
@@ -66,7 +66,7 @@ public class BuilderScreenService {
 
     public BuilderScreen buildingScreenCompleteForUser(Long id, Integer userId) {
         logger.info("Montando tela completa por ID: " + id);
-        BuilderScreen screen = findByIdForUser(id, userId); // Reutiliza o método seguro de busca por ID
+        BuilderScreen screen = findByIdForUser(id, userId);
 
         Gson gson = new Gson();
         List<BuilderDiv> allDivs = builderDivRepository.findDivToBuilding(screen.getId());
@@ -80,7 +80,6 @@ public class BuilderScreenService {
 
     public BuilderScreen create(BuilderScreen item, Integer userId) {
         if (Objects.isNull(item)) throw new RequiredObjectIsNullException();
-        // Para criar, a permissão pode ser genérica, não atrelada a um recurso específico (ID 0L).
         if (!permissionService.canCreate(userId, 0L, "BUILDER_SCREEN")) {
             throw new AccessDeniedException("Acesso negado: você não tem permissão para criar telas.");
         }
@@ -94,7 +93,7 @@ public class BuilderScreenService {
             throw new AccessDeniedException("Acesso negado: você não tem permissão para editar esta tela.");
         }
         logger.info("Atualizando a tela ID: " + item.getId());
-        BuilderScreen old = findByIdForUser(item.getId(), userId); // Garante que o usuário pode ver o que está editando
+        BuilderScreen old = findByIdForUser(item.getId(), userId);
         old.setTitle(item.getTitle());
         old.setIcon(item.getIcon());
         old.setTableName(item.getTableName());

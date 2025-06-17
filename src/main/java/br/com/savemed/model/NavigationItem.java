@@ -109,12 +109,13 @@ public class NavigationItem implements Serializable {
     private boolean disabled;
 
     // Relacionamentos
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PARENT")
     @JsonBackReference("navigation-parent")
     private NavigationItem parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent")
     @JsonManagedReference("navigation-parent")
     private List<NavigationItem> children;
 

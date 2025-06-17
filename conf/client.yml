@@ -23,7 +23,7 @@ spring:
     properties:
       hibernate:
         show_sql: false
-    open-in-view: false
+    open-in-view: true
   liquibase:
     change-log: db/changelog/db.changelog-master.xml
 springdoc:

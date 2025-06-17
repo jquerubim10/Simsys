@@ -1,9 +1,8 @@
 package br.com.savemed.model.ws;
 
-import br.com.savemed.dto.message.EntityReference;
+import br.com.savemed.model.message.EntityReference;
 import br.com.savemed.model.enums.EntidadeType;
 import br.com.savemed.model.enums.TipoMensagem;
-import jakarta.persistence.Embedded;
 import lombok.*;
 import lombok.experimental.Accessors;
 

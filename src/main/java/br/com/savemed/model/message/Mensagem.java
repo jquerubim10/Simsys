@@ -1,8 +1,6 @@
 package br.com.savemed.model.message;
 
-import br.com.savemed.dto.message.EntityReference;
 import br.com.savemed.model.enums.*;
-import br.com.savemed.model.scheduler.Agendamento;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

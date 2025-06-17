@@ -16,7 +16,7 @@ public class PermissaoAdicionalUsuario {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_USUARIO", nullable = false)
+    @JoinColumn(name = "ID_USUARIO", nullable = false, insertable = false, updatable = false)
     private UserSave usuario;
 
     @Column(name = "ID_RECURSO", nullable = false)

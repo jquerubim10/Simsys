@@ -1,14 +1,12 @@
 package br.com.savemed.controllers.message;
 
-import br.com.savemed.dto.message.ContatoDTO;
-import br.com.savemed.dto.message.MensagemChatDTO;
-import br.com.savemed.dto.message.MensagemDTO;
-import br.com.savemed.dto.message.MensagemRequestDTO;
+import br.com.savemed.model.dto.message.ContatoDTO;
+import br.com.savemed.model.dto.message.MensagemChatDTO;
+import br.com.savemed.model.dto.message.MensagemRequestDTO;
 import br.com.savemed.exceptions.ResourceNotFoundException;
 import br.com.savemed.model.enums.CanalType;
 import br.com.savemed.model.enums.EntidadeType;
 import br.com.savemed.model.message.Mensagem;
-import br.com.savemed.model.ws.SendMessageRequest;
 import br.com.savemed.services.message.GenericMessageSender;
 import br.com.savemed.services.message.MensagemService;
 import io.swagger.v3.oas.annotations.Operation;

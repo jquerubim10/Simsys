@@ -26,10 +26,10 @@ public interface NavigationItemRepository extends JpaRepository<NavigationItem, 
     @Query("SELECT DISTINCT n FROM NavigationItem n " +
             "LEFT JOIN PermissaoAdicionalUsuario pau ON pau.idRecurso = n.id AND pau.tipoRecurso = 'NAVIGATION_ITEM' AND pau.usuario.usuario = :userId AND pau.podeVisualizar = true " +
             "LEFT JOIN Permissao p ON p.idRecurso = n.id AND p.tipoRecurso = 'NAVIGATION_ITEM' AND p.podeVisualizar = true " +
-            "LEFT JOIN p.perfil.usuarios up ON up.usuario.usuario = :userId " +
+            "LEFT JOIN UsuarioPerfil up ON up.id.perfilId = p.perfil.id AND up.id.usuarioId = :userId " +
             "LEFT JOIN RestricaoEspecificaUsuario rsu ON rsu.idRecurso = n.id AND rsu.tipoRecurso = 'NAVIGATION_ITEM' AND rsu.usuario.usuario = :userId AND rsu.negarVisualizar = true " +
-            "WHERE n.parent IS NULL AND n.active = true " +
-            "AND (pau.id IS NOT NULL OR up.id IS NOT NULL) AND rsu.id IS NULL " +
+            "WHERE n.parent IS NULL AND n.hidden = false " +
+            "AND rsu.id IS NULL " +
             "ORDER BY n.title ASC")
     Page<NavigationItem> findVisibleMenusForUser(Pageable pageable, @Param("userId") Integer userId);
 
@@ -45,7 +45,7 @@ public interface NavigationItemRepository extends JpaRepository<NavigationItem, 
             "LEFT JOIN Permissao p ON p.idRecurso = n.id AND p.tipoRecurso = 'NAVIGATION_ITEM' AND p.podeVisualizar = true " +
             "LEFT JOIN p.perfil.usuarios up ON up.usuario.usuario = :userId " +
             "LEFT JOIN RestricaoEspecificaUsuario rsu ON rsu.idRecurso = n.id AND rsu.tipoRecurso = 'NAVIGATION_ITEM' AND rsu.usuario.usuario = :userId AND rsu.negarVisualizar = true " +
-            "WHERE n.parent.id = :parentId AND n.active = true " +
+            "WHERE n.parent.id = :parentId AND n.hidden = false " +
             "AND (pau.id IS NOT NULL OR up.id IS NOT NULL) AND rsu.id IS NULL " +
             "ORDER BY n.title ASC")
     Page<NavigationItem> findVisibleChildrenForUser(Pageable pageable, @Param("parentId") Long parentId, @Param("userId") Integer userId);
@@ -56,4 +56,9 @@ public interface NavigationItemRepository extends JpaRepository<NavigationItem, 
         System.out.println("Resultado encontrado: " + result.isPresent());
         return result;
     }
+    @Query("SELECT DISTINCT n FROM NavigationItem n " +
+            "LEFT JOIN FETCH n.parent " +
+            "LEFT JOIN FETCH n.children " +
+            "WHERE n.id = :id")
+    Optional<NavigationItem> findByIdWithRelations(@Param("id") Long id);
 }
