@@ -1,0 +1,93 @@
+<ng-container *transloco="let t">
+    <!-- Header -->
+    <div mat-dialog-title class=" modal-preview-scheduler-title relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 border-b">
+
+        <!-- Image -->
+        <div class="flex shrink-0 items-center justify-center w-20 h-20 mr-4 rounded-full">
+            <mat-icon class="icon-size-20 text-white" [svgIcon]="'mat_outline:date_range'"></mat-icon>
+        </div>
+
+        <!-- Title -->
+        <div class="flex flex-col flex-auto py-2" style="color:#fff">
+            <div class="flex flex-row items-center lg:text-4xl sm:text-2xl font-black tracking-tight">
+                {{ (preview_object.paciente != "" ? preview_object.paciente : preview_object.title) | titlecase }}
+            </div>
+            <div class="flex flex-row items-center mt-4 lg:text-lg sm:text-md"> 
+                <img *ngIf="preview_object.whatsapp" class="icon-size-5 mr-2" src="assets/icons/whatsapp.svg" alt="whatsapp"> 
+                {{preview_object.contato1}}
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <!-- Close -->
+            <button class="ml-1" [mat-dialog-close]="true" mat-flat-button [color]="'bg-transparent'">
+                <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
+            </button>
+        </div>
+    </div>
+    <mat-dialog-content class="flex flex-col py-4 px-8" *ngIf="!isLoading">
+
+        <!-- Medico -->
+        <div class="flex flex-row items-center text-2xl font-black mt-6">
+            <mat-icon class="icon-size-10 mr-4" style="color: #25d366" [svgIcon]="'mat_solid:local_hospital'"></mat-icon>
+            <mat-label> {{ beautifyDoctorName(preview_object.medicoID) }} </mat-label>
+        </div>
+
+        <!-- Hora -->
+        <div class="flex flex-row items-center text-2xl font-black mt-6">
+            <mat-icon class="icon-size-10 mr-4" style="color: blue" [svgIcon]="'mat_solid:schedule'"></mat-icon>
+            <mat-label> {{ beautifyDate(preview_object.horaInicio)}} </mat-label>
+            -
+            <mat-label> {{ beautifyDate(preview_object.horaTermino)}} </mat-label>
+        </div>
+
+        <div class="flex flex-row items-center text-2xl font-black mt-6">
+            <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-64">
+                <mat-select-trigger class="flex flex-row w-10 items-center">
+                    <div class="flex flex-row items-center">
+                        <div class="status-cicle mr-2" [style]="'background-color:' + getStatusColor(preview_object.status)"></div>
+                    </div>
+                </mat-select-trigger>
+                <mat-select [(ngModel)]="preview_object.status" (selectionChange)="handleChangeStatus()">
+                    @for (item of status_list; track $index) {
+                        <mat-option [value]="item.value">
+                            <div class="flex flex-row w-full items-center">
+                                <div class="status-cicle mr-2" [style]="'background-color:' + getStatusColor(item.value)"></div>
+                                {{item.label}}
+                            </div>
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Obs -->
+        <div class="flex flex-row items-center text-2xl font-black mt-6" *ngIf="preview_object.observacoes">
+            <mat-icon class="icon-size-10 mr-4" [svgIcon]="'mat_solid:sort'"></mat-icon>
+            <mat-label> {{ preview_object.observacoes }} </mat-label>
+        </div>
+        
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end"> 
+
+        <!-- resources button -->
+        <button class="ml-1 mb-4 bg-green" mat-flat-button (click)="handleResourcesScheduler()">
+            <mat-icon [svgIcon]="'mat_outline:list'"></mat-icon>
+            <span class="ml-2 mr-1"> {{ t('scheduler.preview.resources')}}</span>
+        </button>
+
+        <!-- duplicate button -->
+        <button class="ml-1 mb-4 bg-purple" mat-flat-button (click)="handleDuplicatedScheduler()">
+            <mat-icon [svgIcon]="'mat_outline:control_point_duplicate'"></mat-icon>
+            <span class="ml-2 mr-1"> {{ t('scheduler.preview.duplicated')}}</span>
+        </button>
+
+        <!-- edit button -->
+        <button class="ml-1 mr-4 mb-4" mat-flat-button [color]="'primary'" (click)="handleEditScheduler()">
+            <mat-icon [svgIcon]="'mat_outline:edit'"></mat-icon>
+            <span class="ml-2 mr-1"> {{ t('scheduler.preview.edit')}}</span>
+        </button>
+    </mat-dialog-actions>
+</ng-container>

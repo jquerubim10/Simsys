@@ -1,0 +1,235 @@
+<ng-container *transloco="let t">
+    <ng-container *ngIf="!isModal; else isModalTemplate">
+        <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+            <!-- Header -->
+            <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+
+                <!-- Title -->
+                <div class="text-4xl font-extrabold tracking-tight">
+                    <!-- ARROW BACK -->
+                    <button class="ml-1" mat-flat-button [color]="'bg-transparent'" (click)="return()">
+                        <mat-icon [svgIcon]="'mat_outline:arrow_back_ios'"></mat-icon>
+                    </button>
+                    {{screenName | titlecase}}
+                </div>
+
+                <!-- Actions -->
+                <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+
+                    <!-- Add item button -->
+                    <button class="ml-4" mat-flat-button [color]="'primary'" (click)="handlePreSaveFunction()" [disabled]="!selectedProductForm.valid">
+                        <mat-icon *ngIf="!isSave" [svgIcon]=" routerType == 'add' ? 'mat_outline:save' : 'mat_outline:refresh'"></mat-icon>
+                        
+                        <mat-progress-spinner
+                            *ngIf="isSave"
+                            [diameter]="24"
+                            [mode]="'indeterminate'"></mat-progress-spinner>
+                            <span class="ml-2 mr-1"> {{routerType == 'add' ? t('util.add') : t('util.update')}}</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main -->
+            <div class="flex flex-auto overflow-hidden" [ngClass]="!selectedProductForm.disabled || 'loading'">
+
+                <!-- Add Form -->
+                <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+                    <!-- Selected product form -->
+                    <form class="flex flex-col w-full " [formGroup]="selectedProductForm" *ngIf="isValid">
+                        <div class="flex flex-col sm:flex-row p-8">
+                            <div class="flex flex-auto flex-wrap">
+                                <div class="flex flex-col w-full sm:pl-8">
+                                    <ng-container *ngFor="let div of this.item$.divs">
+                                        <!-- row -->
+                                        <div class="flex">
+                                            <ng-container *ngFor="let field of div.fields">
+                                                <!-- Skip hidden and text-area fields -->
+                                                <ng-container *ngIf="field.visible !== false && field.type !== 'text-area'">
+                                                
+                                                    <!-- Common field container -->
+                                                    <div class="pr-2" [ngClass]="field.className || 'w-1/4'">
+                                                        
+                                                        <!-- Search Field -->
+                                                        <ng-container *ngIf="field.type === 'search'">
+                                                            <mat-form-field class="w-field" [required]="field.validatorRequired">
+                                                                <mat-label>{{ field.label | titlecase }}</mat-label>
+                                                                <input type="text" matInput
+                                                                    [ngClass]="{'disabled-f': !field.editable}"
+                                                                    (input)="onKeySearch($event.target.value, field)"
+                                                                    [placeholder]="field.placeholder"
+                                                                    [formControlName]="field.formControlName"
+                                                                    [required]="field.validatorFieldRequired"
+                                                                    [matAutocomplete]="auto">
+                                                                
+                                                                <mat-spinner *ngIf="field.isLoadingSelect" class="w-5 h-5"></mat-spinner>
+                                                                
+                                                                <mat-autocomplete #auto="matAutocomplete">
+                                                                @for (name of field.names; track name) {
+                                                                    <mat-option (onSelectionChange)="onEnter(name, field)" [value]="name.value">
+                                                                        {{name.value}}
+                                                                    </mat-option>
+                                                                }
+                                                                @if (names?.length < 1) {
+                                                                    <mat-option class="py-0 px-6 text-md pointer-events-none text-secondary bg-transparent">
+                                                                        {{t('util.no_records')}}
+                                                                    </mat-option>
+                                                                }
+                                                                </mat-autocomplete>
+                                                                
+                                                                <mat-error *ngIf="selectedProductForm?.get(field.formControlName).invalid">
+                                                                    {{ field.validatorMessage || t('error.field')}}
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </ng-container>
+
+                                                        <!-- Default Select Field -->
+                                                        <ng-container *ngIf="field.type === 'select' && field.defaultsValue">
+                                                            <app-field #mark  [selectedProductForm]="selectedProductForm"  [field]="field"> </app-field>
+                                                        </ng-container>
+
+                                                        <!-- SQL Select Field -->
+                                                        <ng-container *ngIf="field.type === 'select' && !field.defaultsValue">
+                                                            <mat-form-field class="w-field" [required]="field.validatorFieldRequired">
+                                                                <mat-label>{{ field.label | titlecase }}</mat-label>
+                                                                <mat-spinner *ngIf="isLoadingSelect" class="h-5 items-center w-30px"></mat-spinner>
+                                                                <mat-select [formControlName]="field.formControlName">
+                                                                    @for (func of field.sqlList; track func.id) {
+                                                                        <mat-option [value]="func.id">{{func.value}}</mat-option>
+                                                                    }
+                                                                </mat-select>
+                                                                <mat-error *ngIf="selectedProductForm?.get(field.formControlName).invalid">
+                                                                    {{ field.validatorMessage || t('error.field')}}
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </ng-container>
+
+                                                        <!-- Default Field (add/edit modes) -->
+                                                        <ng-container *ngIf="shouldShowDefaultField(field)">
+                                                            <app-field #mark  [selectedProductForm]="selectedProductForm"  [field]="field"> </app-field>
+                                                        </ng-container>
+
+                                                    </div>
+                                                </ng-container>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngFor="let div of this.item$.divs">
+                                        <!-- row -->
+                                        <div class="flex">
+                                            <ng-container *ngFor="let field of div.fields">
+                                                <!-- field -->
+                                                <ng-container *ngIf="field.type == 'text-area' && field.visible != false">
+                                                    <app-field class="pr-2" [ngClass]="'w-full'" #mark [field]="field" [selectedProductForm]="selectedProductForm"></app-field>
+                                                </ng-container>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="flex flex-col sm:flex-row p-8">
+                        {{selectedProductForm.value | json}}
+                    </div>
+                    
+                </div>
+
+            </div>
+
+        </div>
+    </ng-container>
+    <ng-template #isModalTemplate>
+        <!-- Selected product form -->
+        <form class="flex flex-col py-5 w-full " #comingSoonNgForm="ngForm" [formGroup]="selectedProductForm" *ngIf="isValid">
+            <div class="flex flex-col sm:flex-row px-1" [ngClass]="!selectedProductForm.disabled || 'loading'">
+                <div class="flex flex-auto flex-wrap">
+                    <div class="flex flex-col w-full sm:pl-8">
+                        <ng-container *ngFor="let div of this.item$.divs">
+                            <!-- row -->
+                            <div class="flex">
+                                <ng-container *ngFor="let field of div.fields">
+                                    <!-- field -->
+                                    <ng-container *ngIf="field.type != 'text-area' && field.visible != false">
+                                        <ng-container *ngIf="routerType == 'add' && field.type != 'identity' && field.type != 'select' && field.type != 'search'">
+                                            <app-field class="pr-2" [ngClass]="field.className || 'w-1/4'" [selectedProductForm]="selectedProductForm" #mark [field]="field"></app-field>
+                                        </ng-container>
+
+                                        <!-- search -->
+                                        <ng-container *ngIf="field.type == 'search'">
+                                            <mat-form-field class="pr-2 w-field" [ngClass]="field.className || 'w-1/4'" [required]="field.validatorRequired">
+                                                <mat-label>{{ field.label | titlecase }}</mat-label>
+                                                <input type="text"
+                                                    matInput
+                                                    [ngClass]="!field.editable ? 'disabled-f' : ''"
+                                                    (input)="onKeySearch($event.target.value, field)"
+                                                    [placeholder]="field.placeholder"
+                                                    [formControlName]="field.formControlName"
+                                                    [required]="field.validatorFieldRequired"
+                                                    [matAutocomplete]="auto">
+                                                    <mat-spinner *ngIf="field.isLoadingSelect" class="w-5 h-5"></mat-spinner>
+                                                    <mat-autocomplete #auto="matAutocomplete" >
+                                                        @for (name of field.names; track name) {
+                                                            <mat-option #matOption (onSelectionChange)="onEnter(name, field)" [value]="name.value">{{name.value}}</mat-option>
+                                                        }
+                                                        <mat-option class="py-0 px-6 text-md pointer-events-none text-secondary bg-transparent" *ngIf="!field?.isLoadingSelect && field?.names?.length < 1">
+                                                            {{t('util.no_records')}}
+                                                        </mat-option>
+                                                    </mat-autocomplete>
+                                                    <mat-error *ngIf="selectedProductForm?.get(field.formControlName).invalid">
+                                                        {{ field.validatorMessage || t('error.field')}}
+                                                    </mat-error>
+                                            </mat-form-field>
+                                        </ng-container>
+
+                                        <!-- Select default -->
+                                        <ng-container *ngIf="field.type == 'select' && field.defaultsValue == true">
+                                            <app-field class="pr-2" [selectedProductForm]="selectedProductForm" [ngClass]="field.className || 'w-1/4'" #mark [field]="field"></app-field>
+                                        </ng-container>
+
+                                        <!-- Select sql -->
+                                        <ng-container *ngIf="field.type == 'select' && field.defaultsValue == false">
+                                            <mat-form-field class="w-field" [ngClass]="field.className || 'w-1/4'" [required]="field.validatorFieldRequired">
+                                                <mat-label>{{ field.label | titlecase }}</mat-label>
+                                                <mat-spinner *ngIf="isLoadingSelect" class="h-5 items-center w-30px"></mat-spinner>
+                                                <mat-select [formControlName]="field.formControlName">
+                                                    <ng-container *ngFor="let func of field.sqlList">
+                                                        <mat-option [value]="func.id" >
+                                                            {{func.value}}
+                                                        </mat-option>
+                                                    </ng-container>
+                                                </mat-select>
+                                                <mat-error *ngIf="selectedProductForm?.get(field.formControlName).invalid">
+                                                    {{ field.validatorMessage || t('error.field')}}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </ng-container>
+                                        
+                                        <ng-container *ngIf="routerType == 'edit'">
+                                            <app-field class="pr-2" [selectedProductForm]="selectedProductForm" [ngClass]="field.className || 'w-1/4'" #mark [field]="field"></app-field>
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngFor="let div of this.item$.divs">
+                            <!-- row -->
+                            <div class="flex">
+                                <ng-container *ngFor="let field of div.fields">
+                                    <!-- field -->
+                                    <ng-container *ngIf="field.type == 'text-area' && field.visible != false">
+                                        <app-field class="pr-2" [selectedProductForm]="selectedProductForm" [ngClass]="'w-full'" #mark [field]="field"></app-field>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div *ngIf="!isValid" class="flex flex-col items-center flex-auto px-10 py-10">
+            <mat-spinner></mat-spinner>
+        </div>
+    </ng-template>
+</ng-container>

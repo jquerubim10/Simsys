@@ -1,0 +1,837 @@
+<ng-container *transloco="let t">
+    <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+        <!-- Header -->
+        <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+            <!-- Loader -->
+            <div class="absolute inset-x-0 bottom-0" *ngIf="isLoading">
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+            </div>
+
+            <!-- Title -->
+            <div class="text-4xl font-extrabold tracking-tight">
+                <!-- ARROW BACK -->
+                <button class="ml-1" mat-flat-button [color]="'bg-transparent'" (click)="return()">
+                    <mat-icon [svgIcon]="'mat_outline:arrow_back_ios'"></mat-icon>
+                </button>
+                {{!dataEdit ? t('screen.add') : t('screen.update')}}
+            </div>
+
+            <!-- Actions -->
+            <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+
+                <!-- Preview screen button -->
+                <button class="ml-4" mat-icon-button [color]="'primary'" (click)="''">
+                    <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:visibility'"></mat-icon>
+                </button>
+
+                <!-- Add item button -->
+                <button class="ml-4" mat-flat-button [color]="'primary'" (click)="!dataEdit ? additem() : updateItem()">
+                    <mat-icon [svgIcon]=" !dataEdit ? 'mat_outline:save' : 'mat_outline:refresh'"></mat-icon>
+                    <span class="ml-2 mr-1"> {{!dataEdit ? t('util.add') : t('util.update')}}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main -->
+        <div class="flex flex-auto overflow-hidden">
+
+            <!-- Add Form -->
+            <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+                <!-- Selected product form -->
+                <form class="flex flex-col w-full " [formGroup]="selectedProductForm">
+
+                    <div class="flex flex-col sm:flex-row p-8">
+                        <div class="flex flex-auto flex-wrap">
+
+                            <!-- DADOS FORM -->
+                            <div class="flex flex-col w-full sm:pl-8">
+
+                                <!-- Name -->
+                                <div class="flex">
+                                    <mat-form-field class="w-60 pr-2 disabled-f" *ngIf="dataEdit">
+                                        <mat-label>{{t('key')}}</mat-label>
+                                        <input matInput [formControlName]="'id'">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-2/3 pr-2">
+                                        <mat-label>{{t('title')}}</mat-label>
+                                        <input matInput [formControlName]="'title'">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-1/4 pr-2">
+                                        <mat-label>{{t('icon')}}</mat-label>
+                                        <mat-icon *ngIf="!isLoading" [ngClass]="iconSize" class="h-5 w-5 items-center pr-1 " [svgIcon]="'mat_outline:' + selectedProductForm.get('icon').value"></mat-icon>
+                                        <mat-select [formControlName]="'icon'">
+                                            @for (icon of iconList; track icon) {
+                                                <mat-option [value]="icon">
+                                                    <mat-icon [ngClass]="iconSize" [svgIcon]="'mat_outline:' + icon"></mat-icon>
+                                                    {{icon}}
+                                                </mat-option>
+                                            }
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-1/4">
+                                        <mat-label>{{t('tableName')}}</mat-label>
+                                        <input matInput [formControlName]="'tableName'">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!-- DADOS ASSINATURA -->
+                            <div class="flex flex-col w-full sm:pl-8">
+
+                                
+                                <div class="flex">
+                                    <!-- Tabela Assinatura -->
+                                    <mat-form-field class="w-1/4 pr-2">
+                                        <mat-label>{{t('screen.sign_table')}}</mat-label>
+                                        <input matInput [formControlName]="'signTable'">
+                                    </mat-form-field>
+
+                                    <!-- Coluna Assinatura -->
+                                    <mat-form-field class="w-1/4">
+                                        <mat-label>{{t('screen.sign_column')}}</mat-label>
+                                        <input matInput [formControlName]="'signColumn'">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full sm:pl-8">
+                                <!-- hidden and disabled -->
+                                <div class="flex flex-row items-center sm:items-start mb-8 sm:mb-0">
+                                    <div class="flex flex-col mt-8 pr-8">
+                                        <span class="font-semibold mb-2">{{t('active')}}</span>
+                                        <mat-slide-toggle [formControlName]="'active'" [color]="'primary'">
+                                            {{selectedProductForm.get('active').value === true ? t('active') :
+                                            t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+
+                                    <div class="flex flex-col mt-8 px-8">
+                                        <span class="font-semibold mb-2">{{t('componentS')}}</span>
+                                        <mat-slide-toggle [formControlName]="'componentS'" [color]="'primary'">
+                                            {{selectedProductForm.get('componentS').value === true ? t('active') : t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+
+                                    <div class="flex flex-col mt-8 px-8" *ngIf="selectedProductForm.get('screenPreview').value === true">
+                                        <span class="font-semibold mb-2">{{t('screen.screenSign')}}</span>
+                                        <mat-slide-toggle [formControlName]="'screenSign'" [color]="'primary'">
+                                            {{selectedProductForm.get('screenSign').value === true ? t('active') : t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+
+                                    <div class="flex flex-col mt-8 px-8">
+                                        <span class="font-semibold mb-2">{{t('screen.screenPreview')}}</span>
+                                        <mat-slide-toggle [formControlName]="'screenPreview'" [color]="'primary'">
+                                            {{selectedProductForm.get('screenPreview').value === true ? t('active') : t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+
+                                    <div class="flex flex-col mt-8 px-8">
+                                        <span class="font-semibold mb-2">{{t('screen.screenLogin')}}</span>
+                                        <mat-slide-toggle [formControlName]="'screenLogin'" [color]="'primary'">
+                                            {{selectedProductForm.get('screenLogin').value === true ? t('active') : t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+
+                                    <div class="flex flex-col mt-8 px-8">
+                                        <span class="font-semibold mb-2">{{t('screen.executeOption')}}</span>
+                                        <mat-slide-toggle [formControlName]="'executeOption'" [color]="'primary'">
+                                            {{selectedProductForm.get('executeOption').value === true ? t('active') : t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full sm:pl-8">
+                                <!-- screen and type -->
+                                <div class="flex flex-row items-center sm:items-start mb-8 sm:mb-0">
+                                    <mat-form-field class="w-1/4 mt-4" *ngIf="selectedProductForm.get('componentS').value === true">
+                                        <mat-label>{{t('screen.home')}}</mat-label>
+                                        <mat-select [formControlName]="'idScreenC'">
+                                            <ng-container *ngFor="let screen of screensList">
+                                                <mat-option [value]="screen.id">
+                                                    {{ screen.title }}
+                                                </mat-option>
+                                            </ng-container>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-1/4 mt-4 px-2" *ngIf="selectedProductForm.get('componentS').value === true">
+                                        <mat-label>{{t('screen.type')}}</mat-label>
+                                        <mat-select [formControlName]="'typeTab'">
+                                            <ng-container *ngFor="let tab of typeTabList">
+                                                <mat-option [value]="tab.id">
+                                                    {{ t('tab.' + tab.id) }}
+                                                </mat-option>
+                                            </ng-container>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full sm:pl-8" *ngIf="selectedProductForm.get('typeTab').value == 'list' || selectedProductForm.get('typeTab').value == 'listQuery'">
+                                <!-- type list where -->
+                                <div class="flex flex-row items-center sm:items-start mb-8 sm:mb-0">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>{{t('screen.whereClause')}}</mat-label>
+                                        <textarea matInput name="sql" rows="9" placeholder="Sql" style="resize: none" [formControlName]="'whereClause'"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!-- Preview Obj -->
+                            <div class="flex flex-col items-center justify-between w-full border-t py-4 mt-8" *ngIf="selectedProductForm.get('screenPreview').value === true">
+                                <div class="text-4xl font-extrabold tracking-tight">
+                                    Preview
+
+                                    <!-- Add product button -->
+                                    <button class="ml-4" mat-icon-button [color]="'primary'" (click)="visiblePreview()">
+                                        <mat-icon class="icon-size-5" *ngIf="isPreviewVisible" [svgIcon]="'mat_solid:visibility'"></mat-icon>
+                                        <mat-icon class="icon-size-5" *ngIf="!isPreviewVisible" [svgIcon]="'mat_solid:visibility_off'"></mat-icon>
+                                    </button>
+                                </div>
+
+                                <div class="flex flex-col flex-auto sm:mb-18 w-full pt-4 overflow-hidden sm:overflow-y-auto" *ngIf="isPreviewVisible">
+
+                                    <div class="flex flex-row text-2xl font-extrabold tracking-tight items-center justify-center">
+                                        <div class="flex flex-row w-full">
+                                            <!-- Titulo -->
+                                            <mat-form-field class="w-1/4 pr-2">
+                                                <mat-label> Titulo </mat-label>
+                                                <input matInput [(ngModel)]="previewObject.title" [ngModelOptions]="{standalone: true}">
+                                            </mat-form-field>
+    
+                                            <!-- Tipo -->
+                                            <mat-form-field class="w-1/4 pr-2">
+                                                <mat-label> Tipo </mat-label>
+                                                <mat-select [(ngModel)]="previewObject.type_template" [ngModelOptions]="{standalone: true}">
+                                                    <ng-container *ngFor="let type of type_template_list">
+                                                        <mat-option [value]="type.id">
+                                                            {{ type.label | titlecase }}
+                                                        </mat-option>
+                                                    </ng-container>
+                                                </mat-select>
+                                            </mat-form-field>
+    
+                                            <!-- Template -->
+                                            <mat-form-field class="w-1/4 pr-2" *ngIf="previewObject.type_template == '_blank'">
+                                                <mat-label> Template </mat-label>
+                                                <mat-select [(ngModel)]="previewObject.template" [ngModelOptions]="{standalone: true}">
+                                                    <ng-container *ngFor="let screen of screen_with_preview">
+                                                        <mat-option [value]="screen.id">
+                                                            {{ screen.title }}
+                                                        </mat-option>
+                                                    </ng-container>
+                                                </mat-select>
+                                            </mat-form-field>
+    
+                                            <!-- Tipo Corpo -->
+                                            <mat-form-field class="w-1/4 pr-2">
+                                                <mat-label> Corpo Tipo </mat-label>
+                                                <mat-select [(ngModel)]="previewObject.type_body" [ngModelOptions]="{standalone: true}">
+                                                    <ng-container *ngFor="let type of type_preview_body">
+                                                        <mat-option [value]="type.id">
+                                                            {{ type.label | titlecase }}
+                                                        </mat-option>
+                                                    </ng-container>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    @if (previewObject.type_template != '_blank') {
+                                        <div class="flex flex-row text-2xl font-extrabold mt-2 tracking-tight items-center justify-center">
+                                            Header
+
+                                            <!-- Add Header -->
+                                            <button class="ml-4" mat-flat-button [color]="'primary'" (click)="addHeaderItem()">
+                                                <mat-icon [svgIcon]="'mat_outline:add_circle_outline'"></mat-icon>
+                                                <span class="ml-2 mr-1"> Adicionar Campo </span>
+                                            </button>
+                                        </div>
+        
+                                        <div class="flex flex-col w-full border-t mt-2 py-4">
+                                            @for (item of previewObject.header_item; track item; let index = $index) {
+                                                <div class="flex flex-col w-full">
+                                                    <div class="flex flex-row w-full items-center mt-4">
+                                                        <!-- Titulo -->
+                                                        <mat-form-field class="w-2/3 pr-2">
+                                                            <mat-label> Label </mat-label>
+                                                            <input matInput [(ngModel)]="item.label" [ngModelOptions]="{standalone: true}">
+                                                        </mat-form-field>
+
+                                                        <!-- Campo -->
+                                                        <mat-form-field class="w-2/3 pr-2">
+                                                            <mat-label> Campo </mat-label>
+                                                            <mat-select [(ngModel)]="item.field" [ngModelOptions]="{standalone: true}">
+                                                                @for (field of fieldList; track $index) {
+                                                                    <mat-option [value]="field.columnName">
+                                                                        {{ field.label | titlecase }}
+                                                                        -
+                                                                        {{ field.columnName }}
+                                                                    </mat-option>
+                                                                }
+                                                            </mat-select>
+                                                        </mat-form-field>
+
+                                                        <!-- Função -->
+                                                        <mat-checkbox class="w-f pr-2" [(ngModel)]="item.have_function" [ngModelOptions]="{standalone: true}">
+                                                            Função ou Pattern
+                                                        </mat-checkbox>
+
+                                                        @if (item.have_function){
+                                                            <!-- Funções -->
+                                                            <mat-form-field class="w-2/3 pr-2">
+                                                                <mat-label> Funções </mat-label>
+                                                                <mat-select [(ngModel)]="item.functions" [ngModelOptions]="{standalone: true}">
+                                                                    @for (tp_func of type_functions; track $index) {
+                                                                        <mat-option [value]="tp_func.id">
+                                                                            {{ tp_func.label | titlecase }}
+                                                                        </mat-option>
+                                                                    }
+                                                                </mat-select>
+                                                            </mat-form-field>
+
+
+                                                            @switch (item.functions) {
+                                                                @case ('together') {
+                                                                    <!-- Campo Junto -->
+                                                                    <mat-form-field class="w-2/3 pr-2">
+                                                                        <mat-label> Campo para Juntar </mat-label>
+                                                                        <mat-select [(ngModel)]="item.field_together" [ngModelOptions]="{standalone: true}">
+                                                                            @for (field of fieldList; track $index) {
+                                                                                <mat-option [value]="field.columnName">
+                                                                                    {{ field.label | titlecase }}
+                                                                                    -
+                                                                                    {{ field.columnName }}
+                                                                                </mat-option>
+                                                                            }
+                                                                        </mat-select>
+                                                                    </mat-form-field>
+                                                                }
+                                                                @case ('pattern') {
+                                                                    <!-- Pattern -->
+                                                                    <mat-form-field class="w-2/3 pr-2">
+                                                                        <mat-label> Pattern </mat-label>
+                                                                        <input matInput [(ngModel)]="item.pattern" [ngModelOptions]="{standalone: true}">
+                                                                    </mat-form-field>
+                                                                }
+                                                                @case ('system_function') {
+                                                                    <!-- Pattern Functions -->
+                                                                    <mat-form-field class="w-2/3 pr-2">
+                                                                        <mat-label>{{t('functionMethod')}}</mat-label>
+                                                                        <mat-select [(ngModel)]="item.functions_system" [ngModelOptions]="{standalone: true}">
+                                                                            @for (func of listFunctions; track $index) {
+                                                                                <mat-option [value]="func.id"> {{t(func.name)}} </mat-option>
+                                                                            }
+                                                                        </mat-select>
+                                                                    </mat-form-field>
+                                                                }
+                                                            }
+                                                        }
+
+                                                        <!-- Delete button -->
+                                                        <button class="ml-4" mat-icon-button [color]="'primary'" (click)="removeHeaderItem(index)">
+                                                            <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+
+                                        <div class="flex flex-row text-2xl font-extrabold tracking-tight items-center justify-center">
+                                            Sub Header
+
+                                            <!-- Add Sub Header -->
+                                            <button class="ml-4" mat-flat-button [color]="'primary'" (click)="addSubHeaderItem()">
+                                                <mat-icon [svgIcon]="'mat_outline:add_circle_outline'"></mat-icon>
+                                                <span class="ml-2 mr-1"> Adicionar Campo </span>
+                                            </button>
+                                        </div>
+        
+                                        <div class="flex flex-col w-full border-t mt-2 py-4">
+                                            @for (item of previewObject.sub_header_item; track item; let index = $index) {
+                                                <div class="flex flex-col w-full">
+                                                    <div class="flex flex-row w-full items-center mt-4">
+                                                        <!-- Titulo -->
+                                                        <mat-form-field class="w-2/3 pr-2">
+                                                            <mat-label> Label </mat-label>
+                                                            <input matInput [(ngModel)]="item.label" [ngModelOptions]="{standalone: true}">
+                                                        </mat-form-field>
+
+                                                        <!-- Campo -->
+                                                        <mat-form-field class="w-2/3 pr-2">
+                                                            <mat-label> Campo </mat-label>
+                                                            <mat-select [(ngModel)]="item.field" [ngModelOptions]="{standalone: true}">
+                                                                <ng-container *ngFor="let field of fieldList">
+                                                                    <mat-option [value]="field.columnName">
+                                                                        {{ field.label | titlecase }}
+                                                                        -
+                                                                        {{ field.columnName }}
+                                                                    </mat-option>
+                                                                </ng-container>
+                                                            </mat-select>
+                                                        </mat-form-field>
+
+                                                        <!-- Função -->
+                                                        <mat-checkbox class="w-f pr-2" [(ngModel)]="item.have_function" [ngModelOptions]="{standalone: true}">
+                                                            Função ou Pattern
+                                                        </mat-checkbox>
+
+                                                        @if (item.have_function){
+                                                            <!-- Funções -->
+                                                            <mat-form-field class="w-2/3 pr-2">
+                                                                <mat-label> Funções </mat-label>
+                                                                <mat-select [(ngModel)]="item.functions" [ngModelOptions]="{standalone: true}">
+                                                                    @for (tp_func of type_functions; track $index) {
+                                                                        <mat-option [value]="tp_func.id">
+                                                                            {{ tp_func.label | titlecase }}
+                                                                        </mat-option>
+                                                                    }
+                                                                </mat-select>
+                                                            </mat-form-field>
+
+
+                                                            @switch (item.functions) {
+                                                                @case ('together') {
+                                                                    <!-- Campo Junto -->
+                                                                    <mat-form-field class="w-2/3 pr-2">
+                                                                        <mat-label> Campo para Juntar </mat-label>
+                                                                        <mat-select [(ngModel)]="item.field_together" [ngModelOptions]="{standalone: true}">
+                                                                            @for (field of fieldList; track $index) {
+                                                                                <mat-option [value]="field.columnName">
+                                                                                    {{ field.label | titlecase }}
+                                                                                    -
+                                                                                    {{ field.columnName }}
+                                                                                </mat-option>
+                                                                            }
+                                                                        </mat-select>
+                                                                    </mat-form-field>
+                                                                }
+                                                                @case ('pattern') {
+                                                                    <!-- Pattern -->
+                                                                    <mat-form-field class="w-2/3 pr-2">
+                                                                        <mat-label> Pattern </mat-label>
+                                                                        <input matInput [(ngModel)]="item.pattern" [ngModelOptions]="{standalone: true}">
+                                                                    </mat-form-field>
+                                                                }
+                                                                @case ('system_function') {
+                                                                    <!-- Pattern Functions -->
+                                                                    <mat-form-field class="w-2/3 pr-2">
+                                                                        <mat-label>{{t('functionMethod')}}</mat-label>
+                                                                        <mat-select [(ngModel)]="item.functions_system" [ngModelOptions]="{standalone: true}">
+                                                                            @for (func of listFunctions; track $index) {
+                                                                                <mat-option [value]="func.id"> {{t(func.name)}} </mat-option>
+                                                                            }
+                                                                        </mat-select>
+                                                                    </mat-form-field>
+                                                                }
+                                                            }
+                                                        }
+
+                                                        <!-- Delete button -->
+                                                        <button class="ml-4" mat-icon-button [color]="'primary'" (click)="removeSubHeaderItem(index)">
+                                                            <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+
+                                        <div class="flex flex-row text-2xl font-extrabold tracking-tight items-center justify-center">
+                                            Corpo
+
+                                            <!-- Add Body -->
+                                            <button class="ml-4" mat-flat-button [color]="'primary'" (click)="addBodyItem()" *ngIf="previewObject.type_body != 'unique'">
+                                                <mat-icon [svgIcon]="'mat_outline:add_circle_outline'"></mat-icon>
+                                                <span class="ml-2 mr-1"> Adicionar Campo </span>
+                                            </button>
+                                        </div>
+        
+                                        <div class="flex flex-col w-full border-t mt-2 py-4">
+                                            @for (item of previewObject.body; track $index) {
+                                                <div class="flex flex-col w-full">
+                                                    <div class="flex flex-row w-full items-center mt-4">
+                                                        <!-- Titulo -->
+                                                        <mat-form-field class="w-2/3 pr-2">
+                                                            <mat-label> Label </mat-label>
+                                                            <input matInput [(ngModel)]="item.label" [ngModelOptions]="{standalone: true}">
+                                                        </mat-form-field>
+
+                                                        <!-- Campo -->
+                                                        <mat-form-field class="w-2/3 pr-2">
+                                                            <mat-label> Campo </mat-label>
+                                                            <mat-select [(ngModel)]="item.field" [ngModelOptions]="{standalone: true}">
+                                                                <ng-container *ngFor="let field of fieldList">
+                                                                    <mat-option [value]="field.columnName">
+                                                                        {{ field.label | titlecase }}
+                                                                        -
+                                                                        {{ field.columnName }}
+                                                                    </mat-option>
+                                                                </ng-container>
+                                                            </mat-select>
+                                                        </mat-form-field>
+
+                                                        <!-- Delete button -->
+                                                        <button class="ml-4" mat-icon-button [color]="'primary'" (click)="removeBodyItem(index)" *ngIf="previewObject.type_body != 'unique'">
+                                                            <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- FIELD LIST -->
+                            <div class="flex flex-col items-center justify-between w-full border-t py-4 mt-8" *ngIf="dataEdit && !isLoading">
+                                <div class="text-4xl font-extrabold tracking-tight">
+                                    {{t('field.list')}}
+
+                                    <!-- Add Field button -->
+                                    <button class="ml-4" mat-flat-button [color]="'primary'" [routerLink]="'field'">
+                                        <mat-icon [svgIcon]="'mat_outline:add_circle_outline'"></mat-icon>
+                                        <span class="ml-2 mr-1"> {{t('util.add')}}</span>
+                                    </button>
+                                </div>
+
+                                <!-- Field list -->
+                                <div class="flex flex-col flex-auto sm:mb-18 w-full pt-4 overflow-hidden sm:overflow-y-auto">
+                                    <ng-container *ngIf="fieldList.length > 0; else noProducts">
+                                        <div class="grid">
+                                            <!-- Header -->
+                                            <div class="inventory-grid-field z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                                matSort matSortDisableClear>
+                                                <!-- label -->
+                                                <div class="hidden sm:block">
+                                                    {{t('label')}}
+                                                </div>
+
+                                                <!-- Placeholder -->
+                                                <div class="hidden sm:block">
+                                                    {{t('placeholder')}}
+                                                </div>
+
+                                                <div class="hidden sm:block">
+                                                    {{t('rowName')}}
+                                                </div>
+
+                                                <div class="hidden sm:block">
+                                                    {{t('type')}}
+                                                </div>
+                                                
+                                                <div class="hidden sm:block" [mat-sort-header]="'hidden'">
+                                                    {{t('active')}}
+                                                </div>
+
+                                                <div class="hidden sm:block">{{t('details')}}</div>
+                                                <div class="hidden sm:block"></div>
+                                            </div>
+                                            <!-- Rows -->
+                                            <ng-container *ngFor="let product of fieldList; trackBy: trackByFn">
+                                                <div  class="inventory-grid-field grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+
+                                                    <!-- Name -->
+                                                    <div class="truncate">
+                                                        {{product.label }}
+                                                    </div>
+
+                                                    <!-- Name -->
+                                                    <div class="truncate">
+                                                        {{product.placeholder }}
+                                                    </div>
+
+                                                    <!-- Order -->
+                                                    <div class="truncate">
+                                                        {{ product.div }}
+                                                    </div>
+
+                                                    <!-- Name -->
+                                                    <div class="truncate">
+                                                        {{t('types.' +product.type)}}
+                                                    </div>
+
+                                                    <!-- Hidden -->
+                                                    <div class="items-center">
+                                                        <ng-container *ngIf="product.active">
+                                                            <mat-icon class="text-green-400 icon-size-5" [svgIcon]="'mat_solid:check'"></mat-icon>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="!product.active">
+                                                            <mat-icon class="text-red-400 icon-size-5" [svgIcon]="'mat_solid:close'"></mat-icon>
+                                                        </ng-container>
+                                                    </div>
+
+                                                    <!-- Details button -->
+                                                    <div class="lg:flex items-center">
+                                                        <button class="min-w-10 min-h-7 h-7 px-2 leading-6"  mat-stroked-button [routerLink]="'field/' + product.id">
+                                                            <mat-icon class="icon-size-5"  [svgIcon]="'mat_solid:edit'"></mat-icon>
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Delete button -->
+                                                    <div class="lg:flex items-center">
+                                                        <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button (click)="deleteField(product.id)">
+                                                            <mat-icon class="icon-size-5"  [svgIcon]="'mat_solid:delete'"></mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>
+
+                                    <ng-template #noProducts>
+                                        <div class="p-6 sm:p-6 text-4xl font-semibold tracking-tight text-center">
+                                            {{t('util.no_records')}}
+                                        </div>
+                                    </ng-template>
+                                </div>
+                            </div>
+
+                            <!-- DIV LIST -->
+                            <div class="flex flex-col items-center justify-between w-full border-t py-4 mt-8" *ngIf="dataEdit && !isLoading">
+                                <div class="text-4xl font-extrabold tracking-tight">
+                                    <!-- Add product button -->
+                                    <button class="ml-4" mat-flat-button [color]="'primary'" (click)="visible()">
+                                        <mat-icon class="icon-size-5" *ngIf="isVisible" [svgIcon]="'mat_solid:visibility'"></mat-icon>
+                                        <mat-icon class="icon-size-5" *ngIf="!isVisible" [svgIcon]="'mat_solid:visibility_off'"></mat-icon>
+                                        <span class="ml-2 mr-1"> {{t('div.edit')}}</span>
+                                    </button>
+                                </div>
+                                <!-- div list -->
+                                <div class="flex flex-col flex-auto sm:mb-18 w-full pt-4 overflow-hidden sm:overflow-y-auto" *ngIf="divList.length > 0 && isVisible">
+                                    <div class="grid">
+                                        <!-- Header -->
+                                        <div class="inventory-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                            matSort matSortDisableClear>
+                                            <!-- Name -->
+                                            <div class="hidden sm:block">
+                                                {{t('title')}}
+                                            </div>
+                                            <div class="hidden lg:block" [mat-sort-header]="'hidden'">
+                                                {{t('hidden')}}
+                                            </div>
+                                            <div class="hidden sm:block">{{t('details')}}</div>
+                                            <div class="hidden sm:block"></div>
+                                        </div>
+                                        <!-- Rows -->
+                                        <ng-container *ngFor="let product of divList; trackBy: trackByFn">
+                                            <div class="inventory-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+
+                                                <!-- Name -->
+                                                <div class="truncate">
+                                                    {{product.title }}
+                                                </div>
+
+                                                <!-- Hidden -->
+                                                <div class="hidden lg:block items-center">
+                                                    <ng-container *ngIf="product.active">
+                                                        <mat-icon class="text-green-400 icon-size-5" [svgIcon]="'mat_solid:visibility'"></mat-icon>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="!product.active">
+                                                        <mat-icon class="text-red-400 icon-size-5" [svgIcon]="'mat_solid:visibility_off'"></mat-icon>
+                                                    </ng-container>
+                                                </div>
+
+                                                <!-- Details button -->
+                                                <div class="lg:flex items-center">
+                                                    <button class="min-w-10 min-h-7 h-7 px-2 leading-6"  mat-stroked-button [routerLink]="'div/' + product.id">
+                                                        <mat-icon class="icon-size-5"  [svgIcon]="'mat_solid:edit'"></mat-icon>
+                                                    </button>
+                                                </div>
+
+                                                <!-- Delete button -->
+                                                <div class="lg:flex items-center">
+                                                    <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button (click)="deleteDiv(product.id)">
+                                                        <mat-icon class="icon-size-5"  [svgIcon]="'mat_solid:delete'"></mat-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PRE LIST -->
+                            <div class="flex flex-col items-center justify-between w-full border-t py-4 mt-4" *ngIf="!isLoading">
+                                <div class="text-4xl font-extrabold tracking-tight">
+                                    {{t('screen.preList')}}
+
+                                    <!-- Add Pre Sql -->
+                                    <button class="ml-4" mat-flat-button [color]="'primary'" (click)="addObjToPre()">
+                                        <mat-icon [svgIcon]="'mat_outline:add_circle_outline'"></mat-icon>
+                                        <span class="ml-2 mr-1"> {{t('screen.add-sql')}}</span>
+                                    </button>
+
+                                    <!-- Add Pre Function -->
+                                    <button class="ml-4" mat-flat-button [color]="'primary'" (click)="addObjFunctionToPre()">
+                                        <mat-icon [svgIcon]="'mat_outline:add_circle_outline'"></mat-icon>
+                                        <span class="ml-2 mr-1"> {{t('screen.add-function')}}</span>
+                                    </button>
+                                </div>
+
+                                <div class="flex flex-col w-full border-t mt-8 py-4">
+                                    <ng-container formArrayName="preSaveFunctionList">
+                                        <ng-container *ngFor="let item_function of preSaveFunctionList.controls; let i = index">
+                                            <div class="flex flex-col w-full items-center" [formGroup]="item_function">
+                                                <div class="flex flex-row w-full items-center mt-4">
+
+                                                    <!-- field_trigger -->
+                                                    <mat-form-field class="w-2/3 pr-2">
+                                                        <mat-label> {{t('screen.pre-save-function.field_trigger')}} </mat-label>
+                                                        <mat-select [formControlName]="'field_trigger'">
+                                                            <ng-container *ngFor="let field of fieldList">
+                                                                <mat-option [value]="field.formControlName">
+                                                                    {{ field.label | titlecase }}
+                                                                </mat-option>
+                                                            </ng-container>
+                                                        </mat-select>
+                                                    </mat-form-field>
+
+                                                    <!-- field_operator -->
+                                                    <mat-form-field class="w-2/3 pr-2">
+                                                        <mat-label> {{t('screen.pre-save-function.field_operator')}} </mat-label>
+                                                        <mat-select [formControlName]="'field_operator'">
+                                                            <ng-container *ngFor="let operator_type of operatorTypeList">
+                                                                <mat-option [value]="operator_type.id">
+                                                                    {{ t('screen.operators.' + operator_type.id) | titlecase }}
+                                                                </mat-option>
+                                                            </ng-container>
+                                                        </mat-select>
+                                                    </mat-form-field>
+
+                                                    <!-- field_affected -->
+                                                    <mat-form-field class="w-2/3 pr-2">
+                                                        <mat-label> {{t('screen.pre-save-function.field_affected')}} </mat-label>
+                                                        <mat-select [formControlName]="'field_affected'">
+                                                            <ng-container *ngFor="let field of fieldList">
+                                                                <mat-option [value]="field.formControlName">
+                                                                    {{ field.label | titlecase }}
+                                                                </mat-option>
+                                                            </ng-container>
+                                                        </mat-select>
+                                                    </mat-form-field>
+
+                                                    <!-- field_function -->
+                                                    <mat-form-field class="w-2/3 pr-2">
+                                                        <mat-label> {{t('screen.pre-save-function.field_function')}} </mat-label>
+                                                        <input matInput [formControlName]="'field_function'">
+                                                    </mat-form-field>  
+                                                    
+                                                    <!-- Delete button -->
+                                                    <button class="ml-4" mat-flat-button [color]="'primary'" (click)="removePreSaveFunctionList(i)">
+                                                        <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </ng-container>  
+                                    </ng-container>
+                                    
+
+                                    <ng-container formArrayName="preSaveList">
+                                        <ng-container *ngFor="let defau of preSaveList.controls; let i = index">
+                                            <div class="flex flex-col w-full items-center" [formGroup]="defau">
+                                                <div class="flex flex-row w-full items-center mt-4">
+                                                    <!-- sql -->
+                                                    <mat-form-field class="w-full pr-2">
+                                                        <mat-label> Sql </mat-label>
+                                                        <textarea matInput name="sql" rows="3" placeholder="Sql" [formControlName]="'sql'"></textarea>
+                                                    </mat-form-field>
+                                                    
+                                                    <!-- Delete button -->
+                                                    <button class="ml-4" mat-flat-button [color]="'primary'" (click)="removePreList(i)">
+                                                        <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                                    </button>
+                                                </div>  
+
+                                                <ng-container formArrayName="preFieldList">
+                                                    <ng-container *ngFor="let preO of getPreList(defau); let o = index">
+                                                        <div class="flex flex-col w-full items-center" [formGroup]="preO">
+                                                            <div class="flex flex-row w-full items-center">
+                                                                <!-- key -->
+                                                                <mat-form-field class="w-2/3 pr-2">
+                                                                    <mat-label>{{t('key')}}</mat-label>
+                                                                    <input matInput [formControlName]="'key'">
+                                                                </mat-form-field>
+                
+                                                                <!-- field -->
+                                                                <mat-form-field class="w-2/3 pr-2">
+                                                                    <mat-label>{{t('field.list')}}</mat-label>
+                                                                    <mat-select [formControlName]="'field'">
+                                                                        <ng-container *ngFor="let field of fieldList">
+                                                                            <mat-option [value]="field.formControlName">
+                                                                                {{ field.label | titlecase }}
+                                                                            </mat-option>
+                                                                        </ng-container>
+                                                                    </mat-select>
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </ng-container>
+                                                
+                                                <div class="flex flex-row w-full items-start">
+                                                    <!-- add sub item -->
+                                                    <button mat-flat-button [color]="'primary'" (click)="addSubObjToPre(i)">
+                                                        <mat-icon [svgIcon]="'heroicons_outline:plus-small'"></mat-icon>
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </ng-container>
+                                    </ng-container> 
+                                </div>
+                            </div>
+
+                            <!-- POS LIST -->
+                            <div class="flex flex-col items-center justify-between w-full border-t py-4 mt-8" *ngIf="!isLoading">
+                                <div class="text-4xl font-extrabold tracking-tight">
+                                    {{t('screen.proList')}}
+
+                                    <!-- Add Pre -->
+                                    <button class="ml-4" mat-flat-button [color]="'primary'" (click)="addObjToPos()">
+                                        <mat-icon [svgIcon]="'mat_outline:add_circle_outline'"></mat-icon>
+                                        <span class="ml-2 mr-1"> {{t('util.add')}}</span>
+                                    </button>
+                                </div>
+
+                                <div class="flex flex-col w-full border-t mt-8 py-4">
+                                    <ng-container formArrayName="proSaveList">
+                                        <ng-container *ngFor="let post of proSaveList.controls; let p = index">
+                                            <div class="flex flex-col w-full items-center" [formGroup]="post">
+                                                <div class="flex flex-row w-full items-center mt-4">
+                                                    <!-- sql -->
+                                                    <mat-form-field class="w-full pr-2">
+                                                        <mat-label> Sql </mat-label>
+                                                        <textarea matInput name="sql" rows="3" placeholder="Sql" [formControlName]="'sql'"></textarea>
+                                                    </mat-form-field>
+                                                    
+                                                    <!-- Delete button -->
+                                                    <button class="ml-4" mat-flat-button [color]="'primary'" (click)="removePostList(p)">
+                                                        <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </ng-container> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="flex items-center justify-between w-full border-t px-8 py-4" *ngIf="dataEdit">
+                    <button class="-ml-4" mat-button [color]="'warn'" (click)="deleteSelectedProduct()">
+                        {{t('delete')}}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</ng-container>

@@ -1,0 +1,257 @@
+{
+    "home": "Home Page",
+
+	"auth": {
+		"sing-in": "Sign in",
+		"sing-out": "Sign out",
+		"username": "Username",
+		"profile": "Profile",
+		"username-error": "User is required",
+		"password": "Password",
+		"password-error": "Password is required",
+		"remember": "Remember me",
+		"forget": "Forgot password ?",
+		"userPassError": "Wrong user or password"
+	},
+	"panel": {
+		"home": "Admin Panel",
+		"add": "New Panel",
+		"update": "Update Panel"
+	},
+	"group": {
+		"home": "Groups",
+		"add": "New Group",
+		"update": "Update Group",
+		"list": "Itens of the Group"
+	},
+	"scheduler": {
+		"title": "Scheduler",
+		"setor" : "Zone",
+		"doctor": "Doctor",
+		"status": "Status",
+		"preview": {
+			"edit": "Edit",
+			"duplicated": "Duplicate",
+			"resources": "Resources"
+		}
+	},
+	"screen": {
+		"list":  "List of Screen",
+		"home": "Screen Panel",
+		"add": "New Screen",
+		"update": "Update Screen",
+        "component": "List Component",
+		"screenSign": "Sign",
+		"screenPreview": "Preview",
+		"screenLogin": "Authorization",
+		"type": "Type of Tab",
+		"whereClause": "List with Query",
+		"executeOption": "Execute Saving/Update",
+		"preList": "Operations before Saving/Update",
+		"proList": "Operations after Save/Update",
+		"add-sql": "Add Sql",
+		"add-function": "Add Function",
+		"childrenScreen": "Submenu",
+		"sign_table": "Table of Sign",
+		"sign_column": "Column of Sign",
+		"pre-save-function": {
+			"field_trigger": "Field Trigger",
+			"field_operator": "Operator",
+			"field_affected": "Field Affected",
+			"field_function": "Function"
+		},
+		"operators": {
+			"empty": "Empty",
+			"not_empty": "Not Empty",
+			"equals": "Equals",
+			"not_equals": "Not Equals"
+		}
+	},
+	"tab": {
+		"list": "List",
+		"listQuery": "List by Query",
+		"ev_hist": "History of Evolutions",
+		"ev_anamnese": "History of Anamnesis",
+		"chart_monitor": "Chart of Monitory",
+		"chart_vitais": "Chart of Vital Signals"
+	},
+	"div": {
+		"list": "List of Div",
+		"add": "Add Row",
+		"edit": "Edit Rows",
+		"update": "Update Row"
+	},
+	"sidebar": {
+		"home": "Sidebar",
+		"add": "New Sidebar",
+		"update": "Update Sidebar"
+	},
+	"field": {
+		"form": {
+			"previewOnly": "Preview Only"
+		},
+		"list": "List of Fields",
+		"add": "New Field",
+		"update": "Update Field"
+	},
+    "util": {
+		"download": "Download",
+		"auth": "Authenticate User",
+		"authorit": "Authorize",
+		"confirm": "Confirm",
+		"login": "Login",
+		"print": "Print",
+		"login-success": "Login success",
+		"add": "Add",
+		"save": "Save",
+        "update": "Update",
+		"sign": "Assinar",
+		"search": "Search",
+		"no_records": "There are no Records!",
+        "update-success" : "Updated Success",
+        "create-success": "Created Success",
+		"delete-title": "Delete Register",
+		"delete-success": "Deleted Success",
+		"delete-message": "Are you sure you want to delete this register? This action cannot be undone!",
+		"cancel": "Cancel",
+        "delete": "Delete",
+		"error": "Error!",
+		"invalidOption": "Operation Wrong!"
+	},
+    "types": {
+        "identity": "Identity",
+		"search": "Search",
+        "text": "Text",
+        "text-area": "Text Area",
+        "number": "Number",
+        "checkbox": "Checkbox",
+		"select": "Select",
+		"date": "Date"
+	},
+    "treatment": {
+		"home": "Nursing Service",
+        "date": "Date Treatment",
+		"inter": "Intern",
+		"ambu": "Outpatient",
+		"emerg": "Emergency",
+		"exter": "External",
+        "data_atendimento" : "Date Treatment",
+		"classificacao" : "Classification",
+		"atendimento" : "Treatment",
+		"nome_pasciente" : "Name Patient",
+		"idade" : "Age",
+		"nome_medico" : "Name Doctor",
+		"nome_convenio" : "Health insurance",
+		"setor" : "Zone",
+		"leito" : "Leito",
+		"status" : "Status"
+	},
+    "evolution": {
+		"all": "Evolutions",
+		"one": "Evolution",
+		"range": "Enter a Date Range",
+		"sub": "Screen to show all Evolutions of patient",
+		"no": "There are is evolutions at the moment..."
+	},
+	"preview": {
+		"header": {
+			"nome": "Name:",
+			"cnpj": "Cnpj:",
+			"address": "Address:",
+			"email": "Email:",
+			"phone": "Phone:",
+			"emitido": "Issued by:",
+			"dtaEmitido" : "In:"
+		},
+		"utils": {
+			"date": "Date:",
+			"hour": "Hour:",
+			"tutor": "Tutor:",
+			"register": "Register:",
+			"evolution": "Evolution:",
+			"pin": "Pin"
+		},
+		"evolution": {
+			"protuario": "Record:",
+			"dtaAge": "Date of Birth:",
+			"age": "Age:"
+		}
+	},
+	"faq": {
+		"prescribe": "Prescribe",
+		"delayed": "Delayed",
+		"checked": "Checked",
+		"suspended": "Suspended",
+		"emergency": "Emergency",
+		"returned": "Returned"
+	},
+	"check": {
+		"item" : "Prescribed Item",
+		"via": "Way",
+		"intervalo": "Interval",
+		"dose" : "Shot",
+		"delayed-dose": "Shot(s) Delayed: ",
+		"executed": "Executed",
+		"return": "Returned"
+	},
+	"error": {
+		"field": "Verify the field"
+	},
+
+	"user": "Username",
+	"password": "Password",
+
+	"listC": "Listing",
+
+    "atualDateAndHour": "Actual Date and Hour ISO",
+	"atualDateAndHourFormated": "Actual Date and Hour Formated",
+	"atualDate": "Actual Date",
+	"atualHour": "Actual Hour",
+    "functionMethod": "System Functions",
+
+	"check-screen": "Check",
+
+	"orderScreen": "Ordem Row",
+	"rowName": "Row Name",
+	"nullValue": "Null Value",
+	"history": "History",
+	"defaultsValue": "Defaults Value",
+    "key": "Key",
+    "name": "Name",
+    "title": "Title",
+    "description": "Description",
+    "icon": "Icon",
+    "type": "Type",
+    "target": "Target",
+    "componentS": "Component",
+    "setor": "Zone",
+	"attendimento": "Atendence",
+    "hidden": "Hidden",
+    "disabled": "Disabled",
+    "active": "Active",
+    "delete": "Delete",
+    "update": "Update",
+    "details": "Details",
+    "tableName": "Table Name",
+    "Atualização": "Updates",
+    "dateCreated": "Date Created",
+    "externalLink": "External Link",
+    "placeholder": "Claceholder",
+    "label": "Label",
+    "divId": "Div Father",
+    "columnName" : "Column Name",
+    "className": "Class Name",
+    "value": "Value",
+    "lines": "Lines",
+    "validatorMin": "Value Min",
+    "validatorMax": "Value Max",
+    "validatorMessage": "Message Validator",
+    "validatorRequired": "Required",
+    "infoSensitive": "Information Sensitive",
+    "searchable": "Searchable",
+    "editable": "Editable",
+    "visible": "Visible",
+	"delete-title": "Delete Register",
+	"delete-success": "Deleted Success",
+	"delete-message": "Are you sure you want to delete this register? This action cannot be undone!"
+}

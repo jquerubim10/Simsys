@@ -1,0 +1,142 @@
+<ng-container *transloco="let t">
+    <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+        <!-- Header -->
+        <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+            <!-- Loader -->
+            <div class="absolute inset-x-0 bottom-0" *ngIf="isLoading">
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+            </div>
+
+            <!-- Title -->
+            <div class="text-4xl font-extrabold tracking-tight">
+                {{ t('scheduler.title') | titlecase }}
+            </div>
+
+            <!-- Actions -->
+            <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+
+                <!-- add button -->
+                <button class="ml-1 button-color w-64" mat-flat-button (click)="handleOpenModalUtils()">
+                    <span class="ml-2 mr-1"> Mapa Agendamento </span>
+                </button>
+
+                <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-select-20-r ml-2 ">
+                    <mat-label>{{t('scheduler.setor')}}</mat-label>
+                    <mat-spinner *ngIf="isLoadingZone" class="w-5 h-5"></mat-spinner>
+                    <mat-select [formControl]="zoneInputControl">
+                        <ng-container *ngFor="let zone of zoneInputList">
+                            <mat-option [value]="zone.centrocusto">
+                                {{ zone.descricao | titlecase }}
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-select-20-r ml-2">
+                    <mat-label>{{t('scheduler.doctor')}}</mat-label>
+                    <mat-spinner *ngIf="isLoadingDoctor" class="w-5 h-5"></mat-spinner>
+                    <mat-select [formControl]="doctorInputControl">
+                        <ng-container *ngFor="let doctor of doctorInputList">
+                            <mat-option [value]="doctor.medico">
+                                {{ doctor.nome | titlecase}}
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Main -->
+        <div class="flex flex-auto overflow-hidden">
+
+            <!-- Calendario -->
+            <div class="flex flex-col mb-5 w-30/100 overflow-hidden sm:overflow-y-auto">
+                <!-- Header -->
+                <div class="relative flex flex-col justify-between py-8 px-6">
+                    <!-- add button -->
+                    <button class="ml-1 button-color" mat-flat-button (click)="handleOpenedNewScheduler()">
+                        <span class="ml-2 mr-1"> Nova Agendamento </span>
+                    </button>
+
+                    <mat-calendar [(selected)]="viewDate" (selectedChange)="handleDateChange($event)"></mat-calendar>
+                </div>
+            </div>
+
+            <!-- Calendario -->
+            <div class="flex flex-col flex-auto mb-5 overflow-hidden sm:overflow-y-auto" *ngIf="!isLoading">
+                <!-- Header -->
+                <div class="relative flex flex-row justify-between py-8 px-6 border-b">
+                    <!-- Title -->
+                    <div class="text-4xl font-extrabold tracking-tight mt-6">
+                        @if (translocoService.getDefaultLang() == 'br') {
+                            {{ viewDate | calendarDate:(view + 'ViewTitle'):'pt-br' | titlecase}}
+                        } @else {
+                            {{ viewDate | calendarDate:(view + 'ViewTitle'):translocoService.getDefaultLang() | titlecase}}
+                        }
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+                        <!-- Mes button -->
+                        <button class="ml-1 button-color" mat-flat-button (click)="handleDayMonthYearView(CalendarView.Month)">
+                            <span class="ml-2 mr-1"> Mês </span>
+                        </button>
+
+                        <!-- Semana button -->
+                        <button class="ml-1 button-color" mat-flat-button (click)="handleDayMonthYearView(CalendarView.Week)">
+                            <span class="ml-2 mr-1"> Semana </span>
+                        </button>
+
+                        <!-- Dia button -->
+                        <button class="ml-1 button-color" mat-flat-button (click)="handleDayMonthYearView(CalendarView.Day)">
+                            <span class="ml-2 mr-1"> Dia </span>
+                        </button>
+                    </div>
+                </div>
+
+                @switch (view) {
+                    @case ('month') {
+                        <mwl-calendar-month-view
+                            [viewDate]="viewDate"
+                            [events]="events"
+                            [activeDayIsOpen]="activeDayIsOpen"
+                            [refresh]="refresh"
+                            (dayClicked)="dayClicked($event.day)"
+                            [locale]="translocoService.getDefaultLang() == 'br' ? 'pt-br' : translocoService.getDefaultLang()"
+                            (eventClicked)="handlePreviewScheduler($event.event)">
+                        </mwl-calendar-month-view>
+                    }
+                    @case ('week') {
+                        <mwl-calendar-week-view 
+                            [viewDate]="viewDate"
+                            [activeDayIsOpen]="activeDayIsOpen"
+                            [refresh]="refresh"
+                            (eventClicked)="handlePreviewScheduler($event.event)"
+                            [locale]="translocoService.getDefaultLang() == 'br' ? 'pt-br' : translocoService.getDefaultLang()" 
+                            [events]="events">
+                        </mwl-calendar-week-view>
+                    }
+                    @case ('day') {
+                        <mwl-calendar-day-view
+                            [viewDate]="viewDate"
+                            [activeDayIsOpen]="activeDayIsOpen"
+                            [refresh]="refresh"
+                            [locale]="translocoService.getDefaultLang() == 'br' ? 'pt-br' : translocoService.getDefaultLang()" 
+                            [events]="events"
+                            (eventClicked)="handlePreviewScheduler($event.event)">
+                        </mwl-calendar-day-view>
+                    }
+                }
+
+                <!--
+                <full-calendar [options]="calendarOptions">
+                    <ng-template #eventContent let-arg>
+                    <b>{{arg.timeText}}</b>
+                    <i>{{arg.event.title}}</i>
+                    </ng-template>
+                </full-calendar>
+                -->
+            </div>
+        </div>
+    </div>
+</ng-container>

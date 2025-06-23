@@ -1,0 +1,180 @@
+<ng-container *transloco="let t">
+    <!--<h2 mat-dialog-title></h2>-->
+    <mat-dialog-content class="mat-typography">
+        <div id="preview-full" class="relative flex flex-col flex-auto min-w-0" style="height: 100%; width: 100%; background: #e3e3e3; padding: .5rem;" *ngIf="isSigned || isFileReadyForDownload">
+            <!--<pdf-viewer  [src]="pdfSrc" style="height: 100%; width: 100%;"></pdf-viewer>-->
+            <iframe [src]="fileURL" width="100%" height="100%" *ngIf="fileURL"></iframe>
+        </div>
+        <div id="preview-full" class="relative flex flex-col flex-auto min-w-0" *ngIf="!isSigned && !isFileReadyForDownload">
+
+            <!-- First Header -->
+            <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-4 px-6 md:px-8 border-b backgroud-b-color-w" *ngIf="!isLoading">
+    
+                <!-- Icon -->
+                <div class="flex shrink-0 items-center justify-center w-40 h-40 mr-4 rounded-full" *ngIf="!logoImageURL">
+                    <mat-icon class="icon-size-20 text-white icon-full-size" [svgIcon]="'mat_outline:account_circle'">
+                    </mat-icon>
+                </div>
+
+                <!-- Image -->
+                <div class="h-40 w-40 mx-auto mr-8 preview-img-align" *ngIf="logoImageURL">
+                    <img class="h-40 w-40" [src]="logoImageURL" [alt]="'Logo'">
+                </div>
+    
+                <!-- Dados -->
+                <div class="flex flex-col flex-auto py-2">
+                    <div class="flex flex-row items-center lg:text-4xl sm:text-2xl font-extrabold tracking-tight">
+                        {{headerObject.nome}}
+                    </div>
+    
+                    <div class="flex flex-row items-center">
+                        <div class="flex flex-col flex-auto py-2">
+                            <div class="mt-1.5 lg:text-lg sm:text-md">{{headerObject.endereco}}</div>
+                            <div class="mt-1.5 lg:text-lg sm:text-md">{{t('preview.header.cnpj')}} {{headerObject.cnpj}}</div>
+                            <div class="mt-1.5 lg:text-lg sm:text-md">{{t('preview.header.phone')}} {{headerObject.telefone}}  {{t('preview.header.email')}} {{headerObject.email}}</div>
+                        </div>
+                        <div class="flex flex-col items-end py-2">
+                            <div class="mt-1 lg:text-lg sm:text-md"> {{t('preview.header.emitido')}} {{loggedObject.logon}} </div>
+                            <div class="mt-1 lg:text-lg sm:text-md"> {{t('preview.header.dtaEmitido')}} {{dateNow}} </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Header -->
+            <div class="relative flex flex-row justify-center py-4 px-6 md:px-8 border-b backgroud-b-color-w">
+                <div class="mt-1 lg:text-lg sm:text-md">
+                    <b> Mapa de Agendamento </b>
+                </div>
+            </div>
+            
+            <!-- Main -->
+            <div class="flex flex-auto overflow-hidden">
+                <div class="w-full">
+                    <!-- {{ dialogData.mapps_list | json }} -->
+
+                    @if (agendamentosAgrupados.length > 0) {
+                        @for (item of agendamentosAgrupados; track item.data) {
+                            <div class="flex flex-col flex-auto py-2 backgroud-b-color-w">
+                                <div class="mt-1 lg:text-lg sm:text-md">
+                                    <b> Data: {{ item.data | date: 'dd/MM/yy' }} </b>
+                                </div>
+
+                                <div class="mt-1 lg:text-lg sm:text-md">
+                                    <b> {{ item.centrocusto + ' - ' +  item.profissional }} </b>
+                                </div>
+
+                                <!-- Products list -->
+                                    <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto mt-4">
+                                        <div class="grid">
+                                            <!-- Header -->
+                                            <div class="inventory-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                                matSort matSortDisableClear>
+                                                <!-- Table Name -->
+                                                <div class="sm:block">
+                                                    Hora
+                                                </div>
+
+                                                <div class="sm:block">
+                                                    Paciente
+                                                </div>
+
+                                                <div class="sm:block">
+                                                    Status
+                                                </div>
+
+                                                <div class="sm:block">
+                                                    Convenio
+                                                </div>
+
+                                                <div class="sm:block">
+                                                    Telefone
+                                                </div>
+
+                                                <div class="sm:block">
+                                                    Observações
+                                                </div>
+                                            </div>
+                                            <!-- Rows -->
+                                            @for (paciente of item.pacientes; track paciente) {
+                                                <div class="inventory-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+                                                    <div class="truncate row-print ">
+                                                        {{ paciente.data | date: 'HH:mm' }}
+                                                    </div>
+
+                                                    <div class="truncate row-print">
+                                                        {{ paciente.paciente }}
+                                                    </div>
+
+                                                    <div class="truncate row-print">
+                                                        {{ paciente.status | titlecase }}
+                                                    </div>
+
+                                                    <div class="truncate row-print">
+                                                        {{ paciente.convenio | titlecase}}
+                                                    </div>
+
+                                                    <div class="truncate row-print">
+                                                        {{ paciente.contato1 }}
+                                                    </div>
+
+                                                    <div class="truncate row-print" style="white-space: inherit !important;">
+                                                        {{ paciente.observacoes }}
+                                                    </div>
+                                                </div>
+
+                                                @if (isAnalizing && item.equipe.length > 0) {
+                                                    <div class="flex flex-row flex-start py-2">
+                                                        <div class="flex flex-col flex-auto w-1/4"></div>
+                                                        <div class="flex flex-col flex-auto w-1/4">
+                                                        @for (equipe of item.equipe; track equipe) {
+                                                            <div class="flex flex-row flex-start w-full font-extrabold">
+                                                                <div class="mt-1 lg:text-lg sm:text-md px-6 w-40"> {{ equipe.funcao | titlecase }} </div>
+                                                                <div class="mt-1 lg:text-lg sm:text-md px-6 w-40"> </div>
+                                                                <div class="mt-1 lg:text-lg sm:text-md"> {{ equipe.profissional_equipe | titlecase }} </div>
+                                                            </div>
+                                                        }
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                                @if (isAnalizing && item.recursos.length > 0) {
+                                                    <div class="flex flex-row flex-start py-2">
+                                                        <div class="flex flex-col flex-auto w-1/4"></div>
+                                                        <div class="flex flex-col flex-auto w-1/4">
+                                                        @for (recurso of item.recursos; track recurso) {
+                                                            <div class="flex flex-row flex-start w-full font-extrabold">
+                                                                <div class="mt-1 lg:text-lg sm:text-md px-6 w-40R"> {{ recurso.tipo_recurso | titlecase }} </div>
+                                                                <div class="mt-1 lg:text-lg sm:text-md px-6 w-40R"> {{ recurso.nome_recurso | titlecase }} </div>
+                                                                <div class="mt-1 lg:text-lg sm:text-md"> {{ recurso.quant_recurso }} </div>
+                                                            </div>
+                                                        }
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>  
+
+                                
+                            </div>
+                        }
+                    }   
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <div class="relative flex flex-row align-center justify-end">
+            <button mat-button [mat-dialog-close]="true" >Close</button>
+
+            <!-- default button print -->
+            <button class="ml-1" mat-flat-button [color]="'primary'" (click)="printScreen()">
+                <mat-icon  [svgIcon]="'mat_outline:print'"></mat-icon>
+                <span class="ml-2 mr-1"> {{t('util.print')}} </span>
+            </button>
+        </div>
+    </mat-dialog-actions>
+</ng-container>
+
+

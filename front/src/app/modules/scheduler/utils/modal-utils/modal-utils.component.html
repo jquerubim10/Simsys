@@ -1,0 +1,169 @@
+<ng-container *transloco="let t">
+    <!-- Header -->
+    <div mat-dialog-title class=" modal-preview-scheduler-title relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-2 px-2 border-b">
+
+        <!-- Image -->
+        <div class="flex shrink-0 items-center justify-center w-20 h-20 mr-4 rounded-full">
+            <mat-icon class="icon-size-20" [svgIcon]="'mat_outline:date_range'"></mat-icon>
+        </div>
+
+        <!-- Title -->
+        <div class="flex flex-col flex-auto py-2">
+            <div class="flex flex-row items-center lg:text-4xl sm:text-2xl font-black tracking-tight">
+               Mapeamento
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <!-- Close -->
+            <button class="ml-1" [mat-dialog-close]="true" mat-flat-button [color]="'bg-transparent'">
+                <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
+            </button>
+        </div>
+    </div>
+    <mat-dialog-content class="flex flex-col py-4 px-8">
+        <div class="w-full">
+            <!-- Form -->
+            <form [formGroup]="mapsForm">
+                <div class="flex flex-row w-full">
+                    <div class="flex flex-col w-1/2">
+                        <mat-label class="font-semibold"> Atendimento </mat-label>
+                        <div class="flex flex-row">
+                            <mat-checkbox class="flex flex-row ml-2" [color]="'primary'" [formControlName]="'consulta'">
+                                Consulta
+                            </mat-checkbox>
+                            <mat-checkbox class="flex flex-row ml-2" [color]="'primary'" [formControlName]="'exame'">
+                                Exame
+                            </mat-checkbox>
+                            <mat-checkbox class="flex flex-row ml-2" [color]="'primary'" [formControlName]="'cirurgia'">
+                                Cirurgia
+                            </mat-checkbox>
+                            <mat-checkbox class="flex flex-row ml-2" [color]="'primary'" [formControlName]="'encaixeHorario'">
+                                Encaixe
+                            </mat-checkbox>
+                        </div>
+                    </div>
+
+                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-1/2 ml-4">
+                        <mat-label>{{t('scheduler.status')}}</mat-label>
+                        <mat-select [formControlName]="'status'">
+                            <mat-select-trigger class="flex flex-row w-full items-center">
+                                <div class="flex flex-row w-full items-center">
+                                    <div class="status-cicle mr-2" [style]="'background-color:' + getStatusColor(mapsForm.get('status').value)"></div>
+                                    {{ getStatusDescription(mapsForm.get('status').value) || '' | titlecase}}
+                                </div>
+                            </mat-select-trigger>
+                            <ng-container *ngFor="let status of status_list">
+                                <mat-option [value]="status.value">
+                                    <div class="flex flex-row w-full items-center">
+                                        <div class="status-cicle mr-2" [style]="'background-color:' + getStatusColor(status.value) "></div>
+                                        {{ status.label | titlecase}}
+                                    </div>
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-64 ml-4">
+                        <mat-label> Data Inicial </mat-label>
+                        <input matInput [matDatepicker]="dateinit" [formControlName]="'horaInicio'" readonly>
+                        <mat-datepicker-toggle [for]="dateinit" matSuffix/>
+                        <mat-datepicker #dateinit disabled="false"/>
+                    </mat-form-field>
+
+                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-64 ml-4">
+                        <mat-label> Data Final </mat-label>
+                        <input matInput [matDatepicker]="datefinish" [formControlName]="'horaTermino'" readonly>
+                        <mat-datepicker-toggle [for]="datefinish" matSuffix/>
+                        <mat-datepicker #datefinish disabled="false"/>
+                    </mat-form-field>
+                </div>
+
+                <div class="flex flex-row w-full">
+                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-full">
+                        <mat-label>{{t('scheduler.setor')}}</mat-label>
+                        <mat-select [formControlName]="'centroCustoID'">
+                            <mat-option [value]="null"> </mat-option>
+                            <ng-container *ngFor="let zone of setorInputList">
+                                <mat-option [value]="zone.centroCusto">
+                                    {{ zone.descricao | titlecase }}
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+    
+                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-full ml-4">
+                        <mat-label>{{t('scheduler.doctor')}}</mat-label>
+                        <mat-select [formControlName]="'medicoID'">
+                            <mat-option [value]="null"> </mat-option>
+                            <ng-container *ngFor="let doctor of doctorInputList">
+                                <mat-option [value]="doctor.medico">
+                                    {{ doctor.nome | titlecase}}
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="flex flex-row w-full">
+
+                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-full">
+                        <mat-label> Convênio </mat-label>
+                        <mat-select [formControlName]="'convenioID'">
+                            <mat-option [value]="null"> </mat-option>
+                            <ng-container *ngFor="let convenio of convenioInputList">
+                                <mat-option [value]="convenio.convenio">
+                                    {{ convenio.descricao | titlecase}}
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- tipo recurso -->
+                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-full ml-4">
+                        <mat-label> Tipo de Recurso </mat-label>
+                        <mat-select [formControlName]="'typeResource'" [ngModelOptions]="{standalone: true}">
+                            <mat-option value="">  </mat-option>
+                            <mat-option value="cirurgia"> Cirurgia </mat-option>
+                            <mat-option value="equipamento"> Equipamento </mat-option>
+                            <mat-option value="exame"> Exame </mat-option>
+                            <mat-option value="anestesista"> Anestesista </mat-option>
+                            <mat-option value="1auxiliar"> 1º Auxiliar </mat-option>
+                            <mat-option value="2auxiliar"> 2º Auxiliar </mat-option>
+                            <mat-option value="3auxiliar"> 3º Auxiliar </mat-option>
+                            <mat-option value="4auxiliar"> 4º Auxiliar </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                
+
+                <div class="flex flex-row items-center w-full">
+                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-full">
+                        <mat-label>Nome Paciente</mat-label>
+                        <input matInput [formControlName]="'paciente'">
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end"> 
+        <div class="flex flex-row">
+            <mat-checkbox class="flex flex-row mb-4" [color]="'primary'" [(ngModel)]="analitico" [ngModelOptions]="{standalone: true}">
+                Analitico
+            </mat-checkbox>
+
+            <!-- button -->
+            <button class="ml-1 mr-4 mb-4" mat-flat-button [color]="'transparent'" (click)="cleanFormMaps()">
+                <mat-icon [svgIcon]="'mat_outline:clear_all'"></mat-icon>
+                <span class="ml-2 mr-1"> Limpar </span>
+            </button>
+
+            <!-- button -->
+            <button class="ml-1 mr-4 mb-4" mat-flat-button [color]="'primary'"  (click)="handleMaps()">
+                <mat-icon [svgIcon]="'mat_outline:edit'"></mat-icon>
+                <span class="ml-2 mr-1"> Mapear</span>
+            </button>
+        </div>
+    </mat-dialog-actions>
+</ng-container>

@@ -1,0 +1,165 @@
+<ng-container *transloco="let t">
+    <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+        <!-- Header -->
+        <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+            <!-- Loader -->
+            <div class="absolute inset-x-0 bottom-0" *ngIf="isLoading">
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+            </div>
+
+            <!-- Title -->
+            <div class="text-4xl font-extrabold tracking-tight">
+                <!-- ARROW BACK -->
+                <button class="ml-1" mat-flat-button [color]="'bg-transparent'" (click)="return()">
+                    <mat-icon [svgIcon]="'mat_outline:arrow_back_ios'"></mat-icon>
+                </button>
+                {{!dataEdit ? t('group.add') : t('group.update')}}
+            </div>
+
+            <!-- Actions -->
+            <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+
+                <!-- Add product button -->
+                <button class="ml-4" mat-flat-button [color]="'primary'" (click)="!dataEdit ? additem() : updateItem()">
+                    <mat-icon [svgIcon]=" !dataEdit ? 'mat_outline:save' : 'mat_outline:refresh'"></mat-icon>
+                    <span class="ml-2 mr-1"> {{!dataEdit ? t('util.add') : t('util.update')}}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main -->
+        <div class="flex flex-auto overflow-hidden">
+
+            <!-- Add Form -->
+            <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+                <!-- Selected product form -->
+                <form class="flex flex-col w-full " [formGroup]="selectedProductForm">
+
+                    <div class="flex flex-col sm:flex-row p-8">
+                        <div class="flex flex-auto flex-wrap">
+                            <!-- Name, SKU & etc. -->
+                            <div class="flex flex-col w-full sm:pl-8">
+
+                                <!-- Name -->
+                                <div class="flex">
+                                    <mat-form-field class="w-60 pr-2 disabled-f" *ngIf="dataEdit">
+                                        <mat-label>{{t('key')}}</mat-label>
+                                        <input matInput [formControlName]="'id'">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-2/3 pl-2">
+                                        <mat-label>{{t('title')}}</mat-label>
+                                        <input matInput [formControlName]="'title'">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-1/4 pl-2">
+                                        <mat-label>{{t('icon')}}</mat-label>
+                                        <mat-icon *ngIf="!isLoading && selectedProductForm.get('icon').value != ''" [ngClass]="iconSize" class="h-5 w-5 items-center pr-1 " [svgIcon]="'mat_outline:' + selectedProductForm.get('icon').value"></mat-icon>
+                                        <mat-select [formControlName]="'icon'">
+                                            <ng-container *ngFor="let icon of iconList">
+                                                <mat-option [value]="icon">
+                                                    <mat-icon [ngClass]="iconSize" [svgIcon]="'mat_outline' + ':' + icon"></mat-icon>
+                                                    {{icon}}
+                                                </mat-option>
+                                            </ng-container>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full sm:pl-8">
+                                <!-- hidden and disabled -->
+                                <div class="flex flex-col items-center sm:items-start mb-8 sm:mb-0">
+                                    <div class="flex flex-col mt-8">
+                                        <span class="font-semibold mb-2">{{t('active')}}</span>
+                                        <mat-slide-toggle [formControlName]="'active'" [color]="'primary'">
+                                            {{selectedProductForm.get('active').value === true ?  t('active') : t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ITEMS LIST -->
+                    <div class="flex flex-col items-center justify-between w-full border-t py-4 mt-8" *ngIf="dataEdit && !isLoading">
+                        <div class="text-4xl font-extrabold tracking-tight">
+                            {{t('group.list')}}
+                        </div>
+
+                        <div class="flex flex-col w-full items-center">
+                            <div class="flex flex-row w-full justify-center items-center">
+                                <!-- value -->
+                                <mat-form-field class="w-2/4 pr-2">
+                                    <mat-label>{{t('screen.list')}}</mat-label>
+                                    <mat-select [(ngModel)]="selectField" [ngModelOptions]="{standalone: true}">
+                                        <ng-container *ngFor="let field of fieldList">
+                                            <mat-option [value]="field">
+                                                {{ field.title | titlecase }}
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <!-- Add Field button -->
+                                <button class="ml-4" mat-flat-button [color]="'primary'" (click)="addToGroup()">
+                                    <mat-icon [svgIcon]="'mat_outline:add_circle_outline'"></mat-icon>
+                                    <span class="ml-2 mr-1"> {{t('util.add')}}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Field list -->
+                        <div class="flex flex-col flex-auto sm:mb-18 w-full pt-4 overflow-hidden sm:overflow-y-auto">
+                            <ng-container *ngIf="groupScreenList.length > 0; else noProducts">
+                                <div class="grid">
+                                    <!-- Header -->
+                                    <div class="inventory-grid-field z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                        matSort matSortDisableClear>
+                                        <!-- label -->
+                                        <div class="hidden sm:block">
+                                            {{t('title')}}
+                                        </div>
+                                        <div class="hidden sm:block"></div>
+                                    </div>
+                                    <!-- Rows -->
+                                    <ng-container *ngFor="let product of groupScreenList; trackBy: trackByFn">
+                                        <div  class="inventory-grid-field grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+
+                                            <!-- Title -->
+                                            <div class="truncate">
+                                                {{product.title }}
+                                            </div>
+
+                                            <!-- Delete button -->
+                                            <div class="lg:flex">
+                                                <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button (click)="removeToGroup(product.id)">
+                                                    <mat-icon class="icon-size-5"  [svgIcon]="'mat_solid:delete'"></mat-icon>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+
+                            <ng-template #noProducts>
+                                <div class="p-6 sm:p-6 text-4xl font-semibold tracking-tight text-center">
+                                    {{t('util.no_records')}}
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between w-full border-t px-8 py-4"  *ngIf="dataEdit">
+                        <button class="-ml-4" mat-button [color]="'warn'" (click)="deleteSelectedProduct()">
+                            {{t('delete')}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</ng-container>

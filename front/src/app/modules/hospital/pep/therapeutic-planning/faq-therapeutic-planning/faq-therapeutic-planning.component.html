@@ -1,0 +1,41 @@
+<ng-container *transloco="let t">
+    <h2 mat-dialog-title>FAQ</h2>
+    <mat-dialog-content class="flex flex-auto overflow-hidden">
+        <div class="flex flex-row flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+            <div class="flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+                <!-- First column -->
+                <div class="flex flex-col flex-auto py-4 px-6 overflow-y-auto overflow-hidden">
+                    <div class="flex flex-row flex-auto w-full text-2xl p-2 font-semibold tracking-tight text-center">
+                        <mat-icon class="font-extrabold w-20" style="color: yellow !important" [svgIcon]="'mat_outline:access_alarm'"></mat-icon>
+                        {{t('faq.delayed')}}
+                    </div>
+                    <div class="flex flex-row flex-auto w-full text-2xl p-2 font-semibold tracking-tight text-center">
+                        <mat-icon class="font-extrabold w-20" style="color: green !important" [svgIcon]="'mat_outline:access_alarm'"></mat-icon>
+                        {{t('faq.prescribe')}}
+                    </div>
+                    <div class="flex flex-row flex-auto w-full text-2xl p-2 font-semibold tracking-tight text-center">
+                        <mat-icon class="font-extrabold w-20" style="color: green !important" [svgIcon]="'mat_outline:check'"></mat-icon>
+                        {{t('faq.checked')}}
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+                <!-- Second column -->
+                <div class="flex flex-col flex-auto py-4 px-6 overflow-y-auto overflow-hidden">
+                    <div class="flex flex-row flex-auto w-full text-2xl p-2 font-semibold tracking-tight text-center">
+                        <mat-icon class="font-extrabold w-20" style="color: gray !important" [svgIcon]="'mat_outline:alarm_off'"></mat-icon>
+                        {{t('faq.suspended')}}
+                    </div>
+                    <div class="flex flex-row flex-auto w-full text-2xl p-2 font-semibold tracking-tight text-center">
+                        <mat-icon class="font-extrabold w-20" style="color: salmon !important" [svgIcon]="'mat_outline:report_problem'"></mat-icon>
+                        {{t('faq.emergency')}}
+                    </div>
+                    <div class="flex flex-row flex-auto w-full text-2xl p-2 font-semibold tracking-tight text-center">
+                        <mat-icon class="font-extrabold w-20" style="color: red !important" [svgIcon]="'mat_outline:restore'"></mat-icon>
+                        {{t('faq.returned')}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+</ng-container>

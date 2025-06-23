@@ -1,0 +1,82 @@
+<div
+    class="fuse-alert-container"
+    *ngIf="!dismissible || dismissible && !dismissed"
+    [@fadeIn]="!dismissed"
+    [@fadeOut]="!dismissed">
+
+    <!-- Border -->
+    <div
+        class="fuse-alert-border"
+        *ngIf="appearance === 'border'"></div>
+
+    <!-- Icon -->
+    <div
+        class="fuse-alert-icon"
+        *ngIf="showIcon">
+
+        <!-- Custom icon -->
+        <div class="fuse-alert-custom-icon">
+            <ng-content select="[fuseAlertIcon]"></ng-content>
+        </div>
+
+        <!-- Default icons -->
+        <div class="fuse-alert-default-icon">
+
+            <mat-icon
+                *ngIf="type === 'primary'"
+                [svgIcon]="'mat_solid:check_circle'"></mat-icon>
+
+            <mat-icon
+                *ngIf="type === 'accent'"
+                [svgIcon]="'mat_solid:check_circle'"></mat-icon>
+
+            <mat-icon
+                *ngIf="type === 'warn'"
+                [svgIcon]="'mat_solid:remove_circle'"></mat-icon>
+
+            <mat-icon
+                *ngIf="type === 'basic'"
+                [svgIcon]="'mat_solid:check_circle'"></mat-icon>
+
+            <mat-icon
+                *ngIf="type === 'info'"
+                [svgIcon]="'mat_solid:info'"></mat-icon>
+
+            <mat-icon
+                *ngIf="type === 'success'"
+                [svgIcon]="'mat_solid:check_circle'"></mat-icon>
+
+            <mat-icon
+                *ngIf="type === 'warning'"
+                [svgIcon]="'mat_solid:warning'"></mat-icon>
+
+            <mat-icon
+                *ngIf="type === 'error'"
+                [svgIcon]="'mat_solid:remove_circle'"></mat-icon>
+
+        </div>
+
+    </div>
+
+    <!-- Content -->
+    <div class="fuse-alert-content">
+
+        <div class="fuse-alert-title">
+            <ng-content select="[fuseAlertTitle]"></ng-content>
+        </div>
+
+        <div class="fuse-alert-message">
+            <ng-content></ng-content>
+        </div>
+
+    </div>
+
+    <!-- Dismiss button -->
+    <button
+        class="fuse-alert-dismiss-button"
+        mat-icon-button
+        (click)="dismiss()">
+        <mat-icon [svgIcon]="'mat_solid:close'"></mat-icon>
+    </button>
+
+</div>

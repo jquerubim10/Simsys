@@ -1,0 +1,84 @@
+<ng-container *transloco="let t">
+    <ng-container [ngSwitch]="field.type">
+        <ng-template [ngSwitchCase]="'identity'">
+            <mat-form-field  class="w-field" [ngClass]="!field.editable ? 'disabled-f' : ''">
+                <mat-label>{{field.label | titlecase}}</mat-label>
+                <input matInput [required]="field.validatorRequired"  [formControlName]="field.formControlName">
+            </mat-form-field>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="'text'">
+            <mat-form-field class="w-field" [ngClass]="!field.editable ? 'disabled-f' : ''">
+                <mat-label>{{t(field.label) | titlecase}}</mat-label>
+                <input matInput [placeholder]="field.placeholder" [required]="field.validatorRequired" [formControlName]="field.formControlName">
+                <mat-error *ngIf="selectedProductForm?.get(field.formControlName).invalid">
+                    {{ field.validatorMessage || t('error.field')}}
+                </mat-error>
+            </mat-form-field>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="'number'">
+            <mat-form-field class="w-field" [ngClass]="!field.editable ? 'disabled-f' : ''">
+                <mat-label>{{field.label | titlecase}}</mat-label>
+                <input matInput [placeholder]="field.placeholder" [required]="field.validatorRequired" type="number" min="0" [formControlName]="field.formControlName">
+                <mat-error *ngIf="selectedProductForm?.get(field.formControlName).invalid">
+                    {{ field.validatorMessage || t('error.field')}}
+                </mat-error>
+            </mat-form-field>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="'text-area'">
+            <mat-label>{{t(field.label) | titlecase}}</mat-label>
+
+            <!-- Body -->
+            <quill-editor class="w-field-q editorMat" 
+                        [ngClass]="!field.editable ? 'disabled-f' : ''"
+                        [formControlName]="field.formControlName" 
+                        [bounds]="'self'" 
+                        [modules]="quillModules"></quill-editor>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="'checkbox'">
+            <mat-checkbox class="mt-8" [formControlName]="field.formControlName" [ngClass]="!field.editable ? 'disabled-f' : ''"  [required]="field.validatorFieldRequired">
+                {{ field.label | titlecase }}
+            </mat-checkbox>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="'date'">
+            <ng-container *ngIf="field.functionMethod">
+                <mat-form-field class="w-field" [ngClass]="!field.editable ? 'disabled-f' : ''">
+                    <mat-label>{{t(field.label) | titlecase}}</mat-label>
+                    <input matInput [placeholder]="field.placeholder" [required]="field.validatorRequired" [formControlName]="field.formControlName">
+                    <mat-error *ngIf="selectedProductForm?.get(field.formControlName).invalid">
+                        {{ field.validatorMessage || t('error.field')}}
+                    </mat-error>
+                </mat-form-field>
+            </ng-container>
+            <ng-container *ngIf="!field.functionMethod">
+                <mat-form-field class="w-field">
+                    <mat-label>{{t(field.label) | titlecase}}</mat-label>
+                    <input matInput [formControlName]="field.formControlName" [matDatepicker]="picker">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </ng-container>
+        </ng-template>
+        
+        <ng-template [ngSwitchCase]="'select'">
+            <mat-form-field class="w-field" [ngClass]="!field.editable ? 'disabled-f' : ''" [required]="field.validatorFieldRequired">
+                <mat-label>{{ field.label | titlecase }}</mat-label>
+                <mat-spinner *ngIf="isLoadingSelect" class="h-5 items-center w-30px"></mat-spinner>
+                <mat-select [formControlName]="field.formControlName">
+                    <ng-container *ngFor="let func of listObj">
+                        <mat-option [value]="func.id">
+                            {{t(func.value)}}
+                        </mat-option>
+                    </ng-container>
+                </mat-select>
+                <mat-error *ngIf="selectedProductForm?.get(field.formControlName)?.invalid">
+                    {{ field.validatorMessage || t('error.field')}}
+                </mat-error>
+            </mat-form-field>
+        </ng-template>
+    </ng-container>
+</ng-container>

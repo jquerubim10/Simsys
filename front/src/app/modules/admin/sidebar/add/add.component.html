@@ -1,0 +1,395 @@
+<ng-container *transloco="let t">
+    <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+        <!-- Header -->
+        <div
+            class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+            <!-- Loader -->
+            <div class="absolute inset-x-0 bottom-0" *ngIf="isLoading">
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+            </div>
+
+            <!-- Title -->
+            <div class="text-4xl font-extrabold tracking-tight">
+                <!-- ARROW BACK -->
+                <button class="ml-1" mat-flat-button [color]="'bg-transparent'" (click)="return()">
+                    <mat-icon [svgIcon]="'mat_outline:arrow_back_ios'"></mat-icon>
+                </button>
+                {{!dataEdit ? t('sidebar.add') : t('sidebar.update')}}
+            </div>
+
+            <!-- Actions -->
+            <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+
+                <!-- Add product button -->
+                <button class="ml-4" mat-flat-button [color]="'primary'" (click)="!dataEdit ? additem() : updateItem()">
+                    <mat-icon [svgIcon]=" !dataEdit ? 'mat_outline:save' : 'mat_outline:refresh'"></mat-icon>
+                    <span class="ml-2 mr-1"> {{!dataEdit ? t('util.add') : t('util.update')}}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main -->
+        <div class="flex flex-auto overflow-hidden">
+
+            <!-- Add Form -->
+            <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+                <!-- Selected product form -->
+                <form class="flex flex-col w-full " [formGroup]="selectedProductForm">
+
+                    <div class="flex flex-col sm:flex-row p-8">
+                        <div class="flex flex-auto flex-wrap">
+                            <!-- Name, SKU & etc. -->
+                            <div class="flex flex-col w-full sm:pl-8">
+
+                                <!-- Name -->
+                                <div class="flex">
+                                    <mat-form-field class="w-60 pr-2 disabled" *ngIf="dataEdit">
+                                        <mat-label>{{t('key')}}</mat-label>
+                                        <input matInput [formControlName]="'id'">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-1/4 pr-2">
+                                        <mat-label>ID</mat-label>
+                                        <input matInput [formControlName]="'idName'">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-2/3 pl-2">
+                                        <mat-label>{{t('title')}}</mat-label>
+                                        <input matInput [formControlName]="'title'">
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-2/3 pl-2" *ngIf="selectedProductForm.get('type').value === 'basic'">
+                                        <mat-label>{{t('screen.home')}}</mat-label>
+                                        <mat-select [formControlName]="'screenId'">
+                                            <ng-container *ngFor="let screen of screenList">
+                                                <mat-option [value]="screen.id">
+                                                    {{screen.title}}
+                                                </mat-option>
+                                            </ng-container>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-2/3 pl-2" *ngIf="selectedProductForm.get('type').value == 'basic' && selectedProductForm.get('screenId').value === null">
+                                        <mat-label>Link</mat-label>
+                                        <input matInput [formControlName]="'link'">
+                                    </mat-form-field>
+                                </div>
+
+
+                                <!-- SKU and Barcode
+                            <div class="flex">
+                                <mat-form-field class="w-1/3 pr-2">
+                                    <mat-label>SKU</mat-label>
+                                    <input matInput [formControlName]="'sku'">
+                                </mat-form-field>
+                                <mat-form-field class="w-2/3 pl-2">
+                                    <mat-label>Barcode</mat-label>
+                                    <input matInput [formControlName]="'barcode'">
+                                </mat-form-field>
+                                <mat-form-field class="w-2/3 pl-2">
+                                    <mat-label>Barcode</mat-label>
+                                    <input matInput [formControlName]="'barcode'">
+                                </mat-form-field>
+                                <mat-form-field class="w-2/3 pl-2">
+                                    <mat-label>Barcode</mat-label>
+                                    <input matInput [formControlName]="'barcode'">
+                                </mat-form-field>
+                                <mat-form-field class="w-2/3 pl-2">
+                                    <mat-label>Barcode</mat-label>
+                                    <input matInput [formControlName]="'barcode'">
+                                </mat-form-field>
+                            </div>
+                            -->
+                            
+                                <!-- Category, Brand & Vendor -->
+                                <div class="flex">
+                                    <mat-form-field class="w-60 pr-2">
+                                        <mat-label>Tooltip</mat-label>
+                                        <input matInput [formControlName]="'tooltip'">
+                                    </mat-form-field>
+                                    <mat-form-field class="w-1/4 pr-2">
+                                        <mat-label>{{t('icon')}}</mat-label>
+                                        <mat-select [formControlName]="'icon'">
+
+                                            <ng-container *ngFor="let icon of iconList">
+                                                <mat-option [value]="icon">
+                                                    <mat-icon [ngClass]="iconSize" [svgIcon]="'mat_outline' + ':' + icon"></mat-icon>
+                                                    {{icon}}
+                                                </mat-option>
+                                            </ng-container>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="w-60 pr-2">
+                                        <mat-label>{{t('type')}}</mat-label>
+                                        <mat-select [formControlName]="'type'">
+                                            <ng-container *ngFor="let type of typesList">
+                                                <mat-option [value]="type.id">
+                                                    {{type.id}}
+                                                </mat-option>
+                                            </ng-container>
+                                        </mat-select>
+                                    </mat-form-field>
+
+
+                                    <mat-form-field class="w-60 pr-2">
+                                        <mat-label>{{t('target')}}</mat-label>
+                                        <mat-select [formControlName]="'target'">
+                                            <ng-container *ngFor="let target of targetList">
+                                                <mat-option [value]="target.id">
+                                                    {{target.id}}
+                                                </mat-option>
+                                            </ng-container>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full sm:pl-8">
+                                <!-- hidden and disabled -->
+                                <div class="flex flex-row items-center sm:items-start mb-8 sm:mb-0">
+
+                                    <div class="flex flex-col mt-8">
+                                        <span class="font-semibold mb-2">{{t('hidden')}}</span>
+                                        <mat-slide-toggle [formControlName]="'hidden'" [color]="'primary'">
+                                            {{ selectedProductForm.get('hidden').value === true ? t('active') : t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+                                    
+                                    <div class="flex flex-col mt-8 px-8" *ngIf="selectedProductForm.get('type').value === 'basic'">
+                                        <span class="font-semibold mb-2"> Submenu </span>
+                                        <mat-slide-toggle [formControlName]="'childrenSidebar'" [color]="'primary'">
+                                            {{ selectedProductForm.get('childrenSidebar').value === true ? t('active') : t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+
+                                    <div class="flex flex-col mt-8 px-8">
+                                        <span class="font-semibold mb-2">{{t('disabled')}}</span>
+                                        <mat-slide-toggle [formControlName]="'disabled'" [color]="'primary'">
+                                            {{ selectedProductForm.get('disabled').value === true ? t('active') : t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+
+                                    <div class="flex flex-col mt-8 px-8">
+                                        <span class="font-semibold mb-2">{{t('externalLink')}}</span>
+                                        <mat-slide-toggle [formControlName]="'externalLink'" [color]="'primary'">
+                                            {{ selectedProductForm.get('externalLink').value === true ? t('active') : t('disabled') }}
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col w-full sm:pl-8 py-8" *ngIf="selectedProductForm.get('type').value === 'basic' && selectedProductForm.get('childrenSidebar').value === true">
+                                <div class="flex flex-row items-center sm:items-start mb-8 sm:mb-0">
+                                    <mat-form-field class="w-1/4">
+                                        <mat-label>{{t('sidebar.home')}}</mat-label>
+                                        <mat-select [formControlName]="'idSidebarMenu'">
+                                            <ng-container *ngFor="let sidebar of sidebarList">
+                                                <mat-option [value]="sidebar.id">
+                                                    {{sidebar.title}}
+                                                </mat-option>
+                                            </ng-container>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="components.length > 0">
+                        <!-- Component List -->
+                        <div class="flex flex-col items-center justify-between w-full border-t py-4 mt-8">
+                            <div class="text-4xl font-extrabold tracking-tight">
+                                {{t('screen.component')}}
+                            </div>
+
+                            <!-- Field list -->
+                            <div class="flex flex-col flex-auto sm:mb-18 w-full pt-4 overflow-hidden sm:overflow-y-auto">
+                                <ng-container *ngIf="components.length > 0; else noProducts">
+                                    <div class="grid">
+                                        <!-- Header -->
+                                        <div class="inventory-grid-field z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                            matSort matSortDisableClear>
+                                            <div class="hidden md:block" [mat-sort-header]="'id'">
+                                                ID
+                                            </div>
+                                            <!-- label -->
+                                            <div class="hidden sm:block">
+                                                {{t('label')}}
+                                            </div>
+
+                                            <!-- Placeholder -->
+                                            <div class="hidden sm:block">
+                                                {{t('placeholder')}}
+                                            </div>
+
+                                            <div class="hidden sm:block">
+                                                {{t('type')}}
+                                            </div>
+                                            
+                                            <div class="hidden lg:block" [mat-sort-header]="'hidden'">
+                                                {{t('active')}}
+                                            </div>
+
+                                            <div class="hidden sm:block">{{t('details')}}</div>
+                                            <div class="hidden sm:block"></div>
+                                        </div>
+                                        <!-- Rows -->
+                                        <ng-container *ngFor="let product of fieldList; trackBy: trackByFn">
+                                            <div  class="inventory-grid-field grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+
+                                                <!-- ID -->
+                                                <div class="hidden md:block truncate">
+                                                    {{product.id}}
+                                                </div>
+
+                                                <!-- Name -->
+                                                <div class="truncate">
+                                                    {{product.label }}
+                                                </div>
+
+                                                <!-- Name -->
+                                                <div class="truncate">
+                                                    {{product.placeholder }}
+                                                </div>
+
+                                                <!-- Name -->
+                                                <div class="truncate">
+                                                    {{product.type }}
+                                                </div>
+
+                                                <!-- Hidden -->
+                                                <div class="hidden lg:block items-center">
+                                                    <ng-container *ngIf="product.active">
+                                                        <mat-icon class="text-green-400 icon-size-5" [svgIcon]="'mat_solid:visibility'"></mat-icon>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="!product.active">
+                                                        <mat-icon class="text-red-400 icon-size-5" [svgIcon]="'mat_solid:visibility_off'"></mat-icon>
+                                                    </ng-container>
+                                                </div>
+
+                                                <!-- Details button -->
+                                                <div class="lg:flex items-center">
+                                                    <button class="min-w-10 min-h-7 h-7 px-2 leading-6"  mat-stroked-button [routerLink]="'field/' + product.id">
+                                                        <mat-icon class="icon-size-5"  [svgIcon]="'mat_solid:edit'"></mat-icon>
+                                                    </button>
+                                                </div>
+
+                                                <!-- Delete button -->
+                                                <div class="lg:flex items-center">
+                                                    <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button (click)="deleteItem(product.id)">
+                                                        <mat-icon class="icon-size-5"  [svgIcon]="'mat_solid:delete'"></mat-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+
+                                <ng-template #noProducts>
+                                    <div class="p-6 sm:p-6 text-4xl font-semibold tracking-tight text-center">
+                                        {{t('util.no_records')}}
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!isLoadingChildren && selectedProductForm.get('type').value === 'aside'">
+
+                        <!-- LIST -->
+                        <div class="flex flex-col items-center justify-between w-full border-t py-4 mt-8">
+                            <div class="text-4xl font-extrabold tracking-tight">
+                                Submenus
+                            </div>
+
+                            <div class="flex flex-col flex-auto sm:mb-18 w-full pt-4 overflow-hidden sm:overflow-y-auto">
+                                <ng-container *ngIf="sidebarChildrenList.length > 0; else noProducts">
+                                    <div class="grid">
+                                        <!-- Header -->
+                                        <div class="inventory-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                            matSort matSortDisableClear>
+                                            <div class="lg:block" [mat-sort-header]="'idName'">{{t('name')}}</div>
+                                            <div class="sm:block" [mat-sort-header]="'title'">
+                                                {{t('title')}}
+                                            </div>
+                                            <div class="lg:block">
+                                                {{t('icon')}}
+                                            </div>
+                                            <div class="lg:block" [mat-sort-header]="'hidden'">
+                                                {{t('hidden')}}
+                                            </div>
+                                            <div class="lg:block" [mat-sort-header]="'disabled'">
+                                                {{t('disabled')}}
+                                            </div>
+                                        </div>
+                                        <!-- Rows -->
+                                        <ng-container *ngFor="let product of sidebarChildrenList; trackBy: trackByFn">
+                                            <div class="inventory-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+                                                <!-- Name -->
+                                                <div class="truncate">
+                                                    {{product.idName}}
+                                                </div>
+            
+                                                <!-- Title -->
+                                                <div class="truncate">
+                                                    {{product.title }}
+                                                </div>
+            
+                                                <!-- Icon -->
+                                                <div class="lg:flex items-center">
+                                                    <mat-icon [ngClass]="iconSize" [svgIcon]="'mat_outline' + ':' + product.icon"></mat-icon>
+                                                </div>
+            
+                                                <!-- Hidden -->
+                                                <div class="lg:block items-center">
+                                                    <ng-container *ngIf="!product.hidden">
+                                                        <mat-icon class="text-green-400 icon-size-5" [svgIcon]="'mat_solid:visibility'"></mat-icon>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="product.hidden">
+                                                        <mat-icon class="text-red-400 icon-size-5" [svgIcon]="'mat_solid:visibility_off'"></mat-icon>
+                                                    </ng-container>
+                                                </div>
+            
+                                                <!-- Disabled -->
+                                                <div class="lg:block items-center">
+                                                    <ng-container *ngIf="!product.disabled">
+                                                        <mat-icon class="text-green-400 icon-size-5" [svgIcon]="'mat_solid:lock_open'"></mat-icon>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="product.disabled">
+                                                        <mat-icon class="text-red-400 icon-size-5" [svgIcon]="'mat_solid:lock'"></mat-icon>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+    
+                                <ng-template #noProducts>
+                                    <div class="p-6 sm:p-6 text-4xl font-semibold tracking-tight text-center">
+                                        {{t('util.no_records')}}
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+
+
+                        <!-- Field list -->
+                        <div class="flex flex-col flex-auto sm:mb-18 w-full pt-4 overflow-hidden sm:overflow-y-auto">
+                            
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between w-full border-t px-8 py-4"  *ngIf="dataEdit">
+                        <button class="-ml-4" mat-button [color]="'warn'" (click)="deleteSelectedProduct()">
+                            {{t('delete')}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</ng-container>

@@ -1,0 +1,72 @@
+<ng-container *transloco="let t">
+    <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto" dkScrollable>
+
+        <!-- Header -->
+        <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+            <!-- Title -->
+
+            <div class="text-4xl font-extrabold tracking-tight">{{t('panel.home')}}</div>
+
+            <!-- Actions -->
+            <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+
+                <!-- Add product button -->
+                <button class="ml-4" mat-flat-button [color]="'primary'" [routerLink]="'add'">
+                    <mat-icon [svgIcon]="'mat_outline:save'"></mat-icon>
+                    <span class="ml-2 mr-1">{{t('util.add')}}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main -->
+        <div id="main" class="flex-auto border-t -mt-px pt-4 sm:pt-6 p-8">
+            <div class="w-full max-w-screen-xl mx-auto">
+                <!-- Painel -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
+                    <ng-container *ngIf="(items$ | async) as painels">
+                        <ng-container *ngFor="let painel of painels; trackBy: trackByFn">
+                            <!-- Summary -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate"></div>
+                                    <div class="ml-2 -mt-2 -mr-3">
+                                        <button mat-icon-button [matMenuTriggerFor]="overdueMenu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:more_vert'"></mat-icon>
+                                        </button>
+                                        <mat-menu #overdueMenu="matMenu">
+                                            <button mat-menu-item (click)="deleteItem(painel.id)">
+                                                <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
+                                                {{t('delete')}}
+                                            </button>
+                                            <button mat-menu-item (click)="editItem(painel)">
+                                                <mat-icon [svgIcon]="'mat_outline:edit'"></mat-icon>
+                                                {{t('update')}}
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+    
+                                <a [routerLink]="'/admin' + painel.url">
+                                    <div class="flex flex-col items-center mt-2">
+                                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">
+                                            <mat-icon class="icon-size-24 text-hint text-blue-500" [svgIcon]="'mat_solid:' + painel.icon"></mat-icon>
+                                        </div>
+                                    </div>
+    
+                                    <div class="flex justify-center">
+                                        <div class="text-4xl font-medium tracking-tight h-10 leading-6 truncate text-blue-500">
+                                            {{painel.title}}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                    
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</ng-container>
