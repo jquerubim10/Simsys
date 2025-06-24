@@ -1,8 +1,8 @@
 package br.com.savemed.services.message;
 
 import br.com.savemed.model.dto.message.ContatoDTO;
-import br.com.savemed.model.message.EntityReference;
 import br.com.savemed.model.dto.message.MensagemRequestDTO;
+import br.com.savemed.model.message.EntityReference;
 import br.com.savemed.exceptions.ResourceNotFoundException;
 import br.com.savemed.model.enums.*;
 import br.com.savemed.model.message.Mensagem;
@@ -93,6 +93,7 @@ public class MensagemService {
         mensagem.setTipoCanal(dto.getCanal());
         mensagem.setConteudo(dto.getConteudo());
         mensagem.setDirecao(DirecaoType.ENVIO);
+        mensagem.setTipoMensagem(dto.getTipoMensagem());
         mensagem.setDataHoraEnvio(LocalDateTime.now());
         mensagem.setStatus(StatusMensagem.PENDENTE); // Status inicial
         mensagem.setTipoMensagem(dto.getTipoMensagem());

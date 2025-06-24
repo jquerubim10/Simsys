@@ -21,4 +21,10 @@ public class CentroCustoSavemedService {
         LOGGER.info("find all centro custo");
         return repository.findAll(pageable);
     }
+
+    public Page<CentroCustoSavemed> findAllSetor(Pageable pageable) {
+        LOGGER.info("find all centrocusto Save");
+        return repository.findAll(pageable);
+    }
+
 }

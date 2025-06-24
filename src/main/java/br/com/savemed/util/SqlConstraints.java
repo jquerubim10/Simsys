@@ -94,6 +94,74 @@ public class SqlConstraints {
                 LEFT JOIN CENTROCUSTO CC ON A.CENTROCUSTO = CC.CentroCusto\s
                 WHERE A.EVOLUCAO = \s""";
 
+
+    public static final String SQL_ANAMNESE_HISTORY = " SELECT A.REGISTRO \n"
+            + "	,A.SEQUENCIA AS EVOLUCAO\n"
+            + "	,A.TEXTOANAMNESE AS textoformatado\n"
+            + "	,A.TEXTOANAMNESE AS TEXTO\n"
+            + "   , CASE WHEN A.TIPO = 1 THEN CASE WHEN LTRIM(RTRIM(ISNULL(FIINT.NOME_SOCIAL,''))) <> '' THEN  '[Ns] ' + UPPER(FIINT.NOME_SOCIAL) ELSE FIINT.NOME END ELSE CASE WHEN LTRIM(RTRIM(ISNULL(FIAMB.NOME_SOCIAL,''))) <> '' THEN  '[Ns] ' + UPPER(FIAMB.NOME_SOCIAL) ELSE FIAMB.NOME END END AS NOME  \n"
+            + "	,A.DATA  ,A.USUARIO, A.HORA \n"
+            + "	,A.IdSignedDocs as SIGNED_DOCS \n"
+            + "   ,COALESCE(NULLIF(CAST(A.TEXTOANAMNESE AS VARCHAR(MAX)), ''), A.TEXTOANAMNESE) AS EVOLUCAO_TXT	             \n"
+            + "   , ISNULL(C.NOME,'')   AS NOME_PROFISSIONAL						 \n"
+            + "   , (CASE WHEN ISNULL(C.MEDICO,0)<>0 THEN							 \n"
+            + "    (  CASE WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=1 THEN 'CRAS'	 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=2 THEN 'COREN'	 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=3 THEN 'CRF'		 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=4 THEN 'CRFA'	 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=5 THEN 'CREFITO'	 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=6 THEN 'CRM'		 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=7 THEN 'CRV'		 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=8 THEN 'CRN'		 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=9 THEN 'CRO'		 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=10 THEN 'CRP'	 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=11 THEN 'OUT'	 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=12 THEN 'CRBM'	 \n"
+            + "            WHEN ISNULL(C.CONSELHOPROFISSIONAL,0)=13 THEN 'CRESS'	 \n"
+            + "            END) + ':' + C.CRM  + '-' + SIGLA 						 \n"
+            + "     ELSE															 \n"
+            + "            (CASE WHEN ISNULL(D.ENFERMEIRA,0)<>0 THEN 'COREN' ELSE '' END) + ':' + LTRIM(D.COREN)  + '-' + SIGLA  \n"
+            + "      END) AS CONSELHO \n"
+            + "	,   T.DESCRICAO AS TUTOR \n"
+            + "   , CASE WHEN A.TIPO = 1 THEN FIINT.FICHA ELSE FIAMB.FICHA END AS PRONTUARIO  \n"
+            + "   , CASE WHEN A.TIPO = 1 THEN INT.DATAINTERNACAO ELSE AMB.DATAINTERNACAO END AS DATAINTERNACAO  \n"
+            + "   , CASE WHEN A.TIPO = 1 THEN INT.DATAALTA ELSE AMB.DATAALTA END AS DATAALTA  \n"
+            + "   , ISNULL(UA.USUARIO,0) AS USUARIO_AUTORIZADOR  \n"
+            + "   , ISNULL(UA.NOME,'')   AS NOME_AUTORIZADOR \n"
+            + "   , ISNULL(UT.DESCRICAO,'') AS TUTOR_AUTORIZADOR  \n"
+            + "   ,(CASE WHEN ISNULL(UM.MEDICO,0)<>0 THEN \n"
+            + "    (  CASE WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=1 THEN 'CRAS'     \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=2 THEN 'COREN'	  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=3 THEN 'CRF'	  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=4 THEN 'CRFA'	  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=5 THEN 'CREFITO'  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=6 THEN 'CRM'	  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=7 THEN 'CRV'	  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=8 THEN 'CRN'	  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=9 THEN 'CRO'	  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=10 THEN 'CRP'	  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=11 THEN 'OUT'	  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=12 THEN 'CRBM'	  \n"
+            + "            WHEN ISNULL(UM.CONSELHOPROFISSIONAL,0)=13 THEN 'CRESS'	  \n"
+            + "            END) + ':' + UM.CRM  + '-' + SIGLA 					  \n"
+            + "     ELSE															  \n"
+            + "            (CASE WHEN ISNULL(UE.ENFERMEIRA,0)<>0 THEN 'COREN' ELSE '' END) + ':' + LTRIM(UE.COREN)  + '-' + SIGLA  \n"
+            + "     END) AS CONSELHO_AUTORIZADOR \n"
+            + " FROM PRES_ANAMNESE A LEFT JOIN USUARIO B ON A.USUARIO=B.USUARIO AND B.MEDICO<>0 \n"
+            + "               LEFT JOIN MEDICOS C ON B.MEDICO=C.MEDICO							 \n"
+            + "               LEFT JOIN ENFERMEIRA D ON A.USUARIO=D.USUARIO					   \n"
+            + "               LEFT JOIN UF E ON C.UFCRM = E.ID_UF							   \n"
+            + "               LEFT JOIN INTERNO INT ON A.REGISTRO = INT.REGISTRO				   \n"
+            + "               LEFT JOIN FICHAS FIINT ON INT.FICHA = FIINT.FICHA 				   \n"
+            + "               LEFT JOIN AMBULATORIAL AMB ON A.REGISTRO = AMB.REGISTRO		   \n"
+            + "               LEFT JOIN FICHAS FIAMB ON AMB.FICHA = FIAMB.FICHA 				   \n"
+            + "               LEFT JOIN USUARIO UA ON A.USUARIOAUTORIZADOR = UA.USUARIO		   \n"
+            + "               LEFT JOIN MEDICOS UM ON UA.MEDICO=UM.MEDICO  AND UM.MEDICO<>0	   \n"
+            + "               LEFT JOIN ENFERMEIRA UE ON A.USUARIOAUTORIZADOR=UE.USUARIO		   \n"
+            + "               LEFT JOIN PRES_CAD_TUTOR UT ON UA.TUTORPRESCRICAO = UT.TUTOR 	   \n"
+            + "               LEFT JOIN PRES_CAD_TUTOR T ON B.TUTORPRESCRICAO = T.TUTOR 		   \n"
+            + " WHERE ";
+
     public static final String SQL_EVOLUTION_HISTORY = " SELECT A.EVOLUCAO \n"
             + "	,A.REGISTRO \n"
             + "   , CASE WHEN A.TIPO = 1 THEN CASE WHEN LTRIM(RTRIM(ISNULL(FIINT.NOME_SOCIAL,''))) <> '' THEN  '[Ns] ' + UPPER(FIINT.NOME_SOCIAL) ELSE FIINT.NOME END ELSE CASE WHEN LTRIM(RTRIM(ISNULL(FIAMB.NOME_SOCIAL,''))) <> '' THEN  '[Ns] ' + UPPER(FIAMB.NOME_SOCIAL) ELSE FIAMB.NOME END END AS NOME  \n"
@@ -321,9 +389,11 @@ public class SqlConstraints {
                                     ",CASE WHEN A.whatsapp = 1 THEN 'SIM' ELSE 'NÃO' END AS whatsapp\n" +
                                     ",A.Observacoes \n" +
                                     ",A.Status\n" +
+                                    ",C.DESCRICAO AS CONVENIO\n" +
                                     ",CASE WHEN A.ENCAIXEHORARIO = 1 THEN 'SIM' ELSE 'NÃO' END AS ENCAIXE \n" +
                                     ",H.codigo AS COD_RECURSO\n" +
                                     ",H.Nome AS NOME_RECURSO\n" +
+                                    ",H.TipoRecurso AS TIPO_RECURSO\n" +
                                     ",G.Quantidade AS QUANT_RECURSO\n" +
                                     ",K.FUNCAO AS FUNCAO\n" +
                                     ",L.NOME + ' - ' + CAST(L.MEDICO AS VARCHAR)  AS PROFISSIONAL_EQUIPE\n" +

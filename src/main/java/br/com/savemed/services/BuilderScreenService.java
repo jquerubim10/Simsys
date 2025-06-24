@@ -9,6 +9,7 @@ import br.com.savemed.repositories.BuilderDivRepository;
 import br.com.savemed.repositories.BuilderFieldRepository;
 import br.com.savemed.repositories.BuilderScreenRepository;
 import com.google.gson.Gson;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,7 +54,7 @@ public class BuilderScreenService {
 
     public BuilderScreen findByIdForUser(Long id, Integer userId) {
         logger.info("Buscando tela por ID: " + id);
-        if (!permissionService.canView(userId, id, "BUILDER_SCREEN")) {
+        if (!permissionService.canView(userId, id, "NAVIGATION_ITEM")) {
             throw new AccessDeniedException("Acesso negado para visualizar esta tela.");
         }
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum registro para este ID!"));
@@ -107,5 +108,13 @@ public class BuilderScreenService {
         logger.info("Excluindo a tela ID: " + id);
         BuilderScreen old = findByIdForUser(id, userId);
         repository.delete(old);
+    }
+
+    @Transactional
+    public BuilderScreen disableBuilderScreen(Long id) {
+        logger.info("Disabling one builder screen!");
+        repository.disableMenu(id);
+
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Records"));
     }
 }

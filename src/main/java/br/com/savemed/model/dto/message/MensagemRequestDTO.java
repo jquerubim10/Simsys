@@ -6,7 +6,11 @@ import br.com.savemed.model.message.EntityReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class MensagemRequestDTO {
 
     @NotNull
@@ -21,6 +25,7 @@ public class MensagemRequestDTO {
     @Schema(description = "Conteúdo da mensagem", example = "Olá, seu agendamento foi confirmado!", requiredMode = Schema.RequiredMode.REQUIRED)
     private String conteudo;
 
+    // Getters e Setters (ADICIONE OS FALTANTES!)
     @NotNull
     @Schema(description = "Tipo da mensagem", example = "LEMBRETE", requiredMode = Schema.RequiredMode.REQUIRED)
     private TipoMensagem tipoMensagem;
@@ -34,61 +39,4 @@ public class MensagemRequestDTO {
     @NotNull
     @Schema(description = "Referência à entidade relacionada", requiredMode = Schema.RequiredMode.REQUIRED)
     private EntityReference entidadeRef;
-
-    // Getters e Setters (ADICIONE OS FALTANTES!)
-    public TipoMensagem getTipoMensagem() {
-        return tipoMensagem;
-    }
-
-    public void setTipoMensagem(TipoMensagem tipoMensagem) {
-        this.tipoMensagem = tipoMensagem;
-    }
-
-    public CanalType getCanal() {
-        return canal;
-    }
-
-    public void setCanal(CanalType canal) {
-        this.canal = canal;
-    }
-
-    public String getDestinatario() {
-        return destinatario;
-    }
-
-    public void setDestinatario(String destinatario) {
-        this.destinatario = destinatario;
-    }
-
-    public String getConteudo() {
-        return conteudo;
-    }
-
-    public void setConteudo(String conteudo) {
-        this.conteudo = conteudo;
-    }
-
-    public Integer getPrioridade() {
-        return prioridade;
-    }
-
-    public void setPrioridade(Integer prioridade) {
-        this.prioridade = prioridade;
-    }
-
-    public String getSistemaExternoId() {
-        return sistemaExternoId;
-    }
-
-    public void setSistemaExternoId(String sistemaExternoId) {
-        this.sistemaExternoId = sistemaExternoId;
-    }
-
-    public EntityReference getEntidadeRef() {
-        return entidadeRef;
-    }
-
-    public void setEntidadeRef(EntityReference entidadeRef) {
-        this.entidadeRef = entidadeRef;
-    }
 }

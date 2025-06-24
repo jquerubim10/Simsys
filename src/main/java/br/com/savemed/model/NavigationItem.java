@@ -93,11 +93,14 @@ public class NavigationItem implements Serializable {
     @Column(name = "EXACT_MATCH", columnDefinition = "boolean default false")
     private boolean exactMatch;
 
+    @Column(name = "ID_PARENT", insertable = false, updatable = false)
+    private Long idSidebarMenu;
+
     @Column(name = "IS_CHILDREN_SIDEBAR", columnDefinition = "boolean default false")
-    private boolean childrenSidebar;
+    private boolean isChildrenSidebar;
 
     @Column(name = "IS_ACTIVE_MATCH_OPTIONS", columnDefinition = "boolean default false")
-    private boolean activeMatchOptions;
+    private boolean isActiveMatchOptions;
 
     @Column(name = "HIDDEN", columnDefinition = "boolean default false")
     private boolean hidden;
@@ -109,7 +112,6 @@ public class NavigationItem implements Serializable {
     private boolean disabled;
 
     // Relacionamentos
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PARENT")
     @JsonBackReference("navigation-parent")

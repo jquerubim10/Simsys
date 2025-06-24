@@ -104,7 +104,7 @@ public class SignService  {
         return signedDocsService.getSignedDocument(id);
     }
 
-    public SignedDocs signingSaveTo(MultipartFile file, String pin, String tableName, Long tableId, Long userId, String whereClauseColumn) throws Exception {
+    public SignedDocs signingSaveTo(MultipartFile file, String pin, String tableName, Long tableId, Long userId, String whereClauseColumn, String signColumnName) throws Exception {
         LOGGER.info("[init] --- [signingSaveTo] --- [SignService] ----------  Metodo para assinatura e upload na base");
         LOGGER.info("[init] --- [signingSaveTo] --- [SignService] ----------  Buscando usuário por id!");
 
@@ -127,13 +127,13 @@ public class SignService  {
         LOGGER.info("[signingSaveTo] --- [SignService] ----------  Iniciar assinatura!");
 
         MultipartFile fileConversionUtil = new FileConversionUtil(user.getData());
-        return signingPdfSave(file, fileConversionUtil, pin, tableName, tableId, userId, whereClauseColumn);
+        return signingPdfSave(file, fileConversionUtil, pin, tableName, tableId, userId, whereClauseColumn, signColumnName);
     }
 
     /**
      * Assina um arquivo PDF e adiciona um carimbo com informações básicas
      */
-    public SignedDocs signingPdfSave(MultipartFile pdfFile, MultipartFile pfxFile, String pin, String sourceTable, Long sourceTableId, Long signedUserId, String whereClauseColumn) throws Exception {
+    public SignedDocs signingPdfSave(MultipartFile pdfFile, MultipartFile pfxFile, String pin, String sourceTable, Long sourceTableId, Long signedUserId, String whereClauseColumn, String signColumnName) throws Exception {
         LOGGER.info("[init] --- [signingPdfSave] --- [SignService] ----------  Gerando arquivo assinado!");
 
         Security.addProvider(new BouncyCastleProvider());
@@ -166,7 +166,7 @@ public class SignService  {
 
         LOGGER.info("[init] --- [signingPdfSave] --- [SignService] ----------  Persistence do arquivo na base!");
         MultipartFile signedFile = new FileConversionUtil(baosSigned.toByteArray());
-        SignedDocs response = this.signedDocsService.persistSignedFile(signedUserId, sourceTable, sourceTableId, signatureHash, signedFile, whereClauseColumn);
+        SignedDocs response = this.signedDocsService.persistSignedFile(signedUserId, sourceTable, sourceTableId, signatureHash, signedFile, whereClauseColumn, signColumnName);
 
         if (Objects.isNull(response)) {
             throw new ResourceNotFoundException("Error no persistence file !!");
@@ -175,9 +175,16 @@ public class SignService  {
         LOGGER.info("[success] --- [signingPdfSave] --- [SignService] ----------  Persistence do arquivo na base com sucesso!");
 
         LOGGER.info("[init] --- [signingPdfSave] --- [SignService] ----------  Atualizando a tabela destino para saber que o registro tem assinatura");
-        String query = "UPDATE " + response.getSourceTable() +
-                " SET IdSignedDocs = " + response.getId() +
-                " WHERE " + response.getWhereClauseColumn() + " = " + response.getSourceTableId();
+
+        String where;
+
+        if (!signColumnName.isEmpty()) {
+            where = String.format(" WHERE %s = %d", signColumnName, response.getSourceTableId());
+        } else {
+            where = String.format(" WHERE %s = %d", response.getWhereClauseColumn(), response.getSourceTableId());
+        }
+
+        String query = String.format("UPDATE %s SET IDSIGNEDDOCS = %d %s", sourceTable, response.getId(), where);
 
         dynamicInsert(query);
         return response;

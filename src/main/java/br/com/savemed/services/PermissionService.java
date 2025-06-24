@@ -138,10 +138,23 @@ public class PermissionService {
      */
     private PermissionFlags findPermissionFromProfiles(Integer userId, Long resourceId, String resourceType) {
         List<Object[]> result = entityManager.createNativeQuery(
-                        "SELECT MAX(CAST(P.PODE_VISUALIZAR AS INT)), MAX(CAST(P.PODE_CRIAR AS INT)), MAX(CAST(P.PODE_EDITAR AS INT)), MAX(CAST(P.PODE_EXCLUIR AS INT)), MAX(CAST(P.PODE_IMPRIMIR AS INT)) " +
-                                "FROM PERMISSAO P JOIN USUARIO_PERFIL UP ON P.ID_PERFIL = UP.ID_PERFIL " +
-                                "WHERE UP.ID_USUARIO = ?1 AND P.ID_RECURSO = ?2 AND P.TIPO_RECURSO = ?3")
-                .setParameter(1, userId).setParameter(2, resourceId).setParameter(3, resourceType)
+                        " SELECT " +
+                                "     MAX(CAST(P.PODE_VISUALIZAR AS INT)) AS PODE_VISUALIZAR, " +
+                                "     MAX(CAST(P.PODE_CRIAR AS INT)) AS PODE_CRIAR, " +
+                                "     MAX(CAST(P.PODE_EDITAR AS INT)) AS PODE_EDITAR, " +
+                                "     MAX(CAST(P.PODE_EXCLUIR AS INT)) AS PODE_EXCLUIR, " +
+                                "     MAX(CAST(P.PODE_IMPRIMIR AS INT)) AS PODE_IMPRIMIR " +
+                                " FROM PERMISSAO P " +
+                                " JOIN USUARIO_PERFIL UP ON P.ID_PERFIL = UP.ID_PERFIL " +
+                                " LEFT JOIN FUSE_NAVIGATION_ITEM NI ON P.ID_RECURSO = NI.ID AND P.TIPO_RECURSO = 'NAVIGATION_ITEM' " +
+                                " LEFT JOIN BUILDER_SCREEN BS ON NI.SCREEN_ID = BS.ID " +
+                                " WHERE  " +
+                                "     UP.ID_USUARIO = ?1 AND ( " +
+                                "         (P.TIPO_RECURSO = 'NAVIGATION_ITEM' AND BS.ID = ?2) " +
+                                "         OR  " +
+                                "         (P.TIPO_RECURSO = 'BUILDER_SCREEN' AND P.ID_RECURSO = ?2) " +
+                                "     ) " )
+                .setParameter(1, userId).setParameter(2, resourceId)
                 .getResultList();
 
         if (result.isEmpty() || result.get(0)[0] == null) return null; // Retorna null se não houver permissões de perfil

@@ -36,6 +36,7 @@ public class MensagemController {
     private final MensagemService mensagemService;
     private GenericMessageSender genericMessageSender;
     private static final Logger logger = LoggerFactory.getLogger(MensagemController.class);
+
     public MensagemController(MensagemService service) {
         this.mensagemService = service;
     }
@@ -104,9 +105,7 @@ public class MensagemController {
 
     @Operation(summary = "Cria uma nova mensagem a partir de dados brutos (MensagemRequestDTO)")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Mensagem> criarMensagem(
-            @Valid @RequestBody MensagemRequestDTO dto
-    ) {
+    public ResponseEntity<Mensagem> criarMensagem( @Valid @RequestBody MensagemRequestDTO dto) {
         try {
             Mensagem mensagem = mensagemService.criarMensagem(dto);
             mensagemService.processarMensagemAssincrono(mensagem.getId());
@@ -123,10 +122,9 @@ public class MensagemController {
                     .body(null);
         }
     }
+
     @PostMapping
-    public ResponseEntity<Mensagem> criarEEnviarMensagem(
-            @Valid @RequestBody MensagemRequestDTO dto
-    ) {
+    public ResponseEntity<Mensagem> criarEEnviarMensagem(@Valid @RequestBody MensagemRequestDTO dto) {
         Mensagem mensagem = mensagemService.criarMensagemEEnviar(dto);
         return ResponseEntity.accepted().body(mensagem); // HTTP 202 Accepted
     }

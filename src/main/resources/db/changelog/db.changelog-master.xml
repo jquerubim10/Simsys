@@ -83,4 +83,13 @@
     <include file="/db/changelog/db.changelog-1.0.35.xml"/>
     <!-- 1.0.36 -->
     <include file="/db/changelog/db.changelog-1.0.36.xml"/>
+    <!-- 1.0.37 -->
+    <include file="/db/changelog/db.changelog-1.0.37.xml"/>
+    <!-- 1.0.38 -->
+    <include file="/db/changelog/db.changelog-1.0.38.xml"/>
+    <!-- 1.0.39
+    <include file="/db/changelog/db.changelog-1.0.39.xml"/>
+    <!- 1.0.40
+    <include file="/db/changelog/db.changelog-1.0.40.xml"/>
+    -->
 </databaseChangeLog>

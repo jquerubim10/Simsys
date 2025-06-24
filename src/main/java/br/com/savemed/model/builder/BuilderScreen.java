@@ -57,6 +57,12 @@ public class BuilderScreen implements Serializable {
     @Column(name = "TABLE_NAME")
     private String tableName;
 
+    @Column(name = "SIGN_TABLE")
+    private String signTable;
+
+    @Column(name = "SIGN_COLUMN")
+    private String signColumn;
+
     @Column(name = "ID_SCREEN_C")
     private Long idScreenC;
 

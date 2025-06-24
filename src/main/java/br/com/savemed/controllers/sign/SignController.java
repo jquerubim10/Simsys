@@ -132,10 +132,13 @@ public class SignController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
             })
     public ResponseEntity<SignedDocs> signedPdfSave(@RequestParam("file") MultipartFile file,
-                                                    @RequestParam("pin") String pin, @RequestParam("tableName") String tableName,
-                                                    @RequestParam("tableId") Long tableId, @RequestParam("userId") Long userId,
-                                                    @RequestParam("whereClauseColumn") String whereClauseColumn) {
-        SignedDocs response = service.signingSaveTo(file, pin, tableName, tableId, userId, whereClauseColumn);
+                                                    @RequestParam("pin") String pin,
+                                                    @RequestParam("tableName") String tableName,
+                                                    @RequestParam("tableId") Long tableId,
+                                                    @RequestParam("userId") Long userId,
+                                                    @RequestParam("whereClauseColumn") String whereClauseColumn,
+                                                    @RequestParam("signColumnName") String signColumnName) {
+        SignedDocs response = service.signingSaveTo(file, pin, tableName, tableId, userId, whereClauseColumn, signColumnName);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + response.getDocumentHash() + "\"");

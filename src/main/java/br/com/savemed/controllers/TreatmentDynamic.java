@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @RestController
@@ -63,7 +64,10 @@ public class TreatmentDynamic {
         logger.info("[init] -------- [evolution] execute select to get response list");
 
         List<QueryReturn> result = new ArrayList<>();
-        String query = SqlConstraints.SQL_EVOLUTION_HISTORY + item.getWhereValue() + " ORDER BY A.EVOLUCAO DESC, A.HORA DESC";
+
+        String query = Objects.equals(item.getSelectOne(), "EV") ? SqlConstraints.SQL_EVOLUTION_HISTORY + item.getWhereValue() + " ORDER BY A.EVOLUCAO DESC, A.HORA DESC"
+                                                   : SqlConstraints.SQL_ANAMNESE_HISTORY + item.getWhereValue() + " ORDER BY A.REGISTRO DESC, A.HORA DESC";
+
         try {
             Query query1 = entityManager.createNativeQuery(query, QueryReturn.class);
 

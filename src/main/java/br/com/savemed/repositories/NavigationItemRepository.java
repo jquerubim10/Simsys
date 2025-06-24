@@ -24,6 +24,7 @@ public interface NavigationItemRepository extends JpaRepository<NavigationItem, 
      * @return Uma página de itens de navegação visíveis para o usuário.
      */
     @Query("SELECT DISTINCT n FROM NavigationItem n " +
+            "LEFT JOIN FETCH n.children " +
             "LEFT JOIN PermissaoAdicionalUsuario pau ON pau.idRecurso = n.id AND pau.tipoRecurso = 'NAVIGATION_ITEM' AND pau.usuario.usuario = :userId AND pau.podeVisualizar = true " +
             "LEFT JOIN Permissao p ON p.idRecurso = n.id AND p.tipoRecurso = 'NAVIGATION_ITEM' AND p.podeVisualizar = true " +
             "LEFT JOIN UsuarioPerfil up ON up.id.perfilId = p.perfil.id AND up.id.usuarioId = :userId " +

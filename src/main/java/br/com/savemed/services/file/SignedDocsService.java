@@ -26,9 +26,9 @@ public class SignedDocsService {
         this.repository = repository;
     }
 
-    public SignedDocs persistSignedFile(Long signedUserId, String sourceTable, Long sourceTableId, String documentHash, MultipartFile signedDocument, String whereClauseColumn) throws IOException {
+    public SignedDocs persistSignedFile(Long signedUserId, String sourceTable, Long sourceTableId, String documentHash, MultipartFile signedDocument, String whereClauseColumn, String signColumnName) throws IOException {
         LOGGER.config("Persisting signed document");
-        SignedDocs signedDocs = new SignedDocs(sourceTable, signedUserId, sourceTableId, documentHash, signedDocument.getBytes(), whereClauseColumn);
+        SignedDocs signedDocs = new SignedDocs(sourceTable, signedUserId, sourceTableId, documentHash, signedDocument.getBytes(), whereClauseColumn, signColumnName);
         return repository.save(signedDocs);
     }
 

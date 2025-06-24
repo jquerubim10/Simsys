@@ -611,4 +611,18 @@ public class DynamicQuery {
         }
     }
 
+
+    /***
+     * TODO
+     *
+     * .setTupleTransformer((tuple, aliases) -> {
+     *         MeuDTO dto = new MeuDTO();
+     *         dto.setNome((String) tuple[0]); // índice ou nome da coluna
+     *         dto.setIdade((Integer) tuple[1]);
+     *         dto.setValor((BigDecimal) tuple[2]);
+     *         return dto;
+     *     })
+     *
+     */
+
 }

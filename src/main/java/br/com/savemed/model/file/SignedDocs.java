@@ -45,6 +45,12 @@ public class SignedDocs implements Serializable {
     @Column(name = "WHERE_CLAUSE_COLUMN")
     private String whereClauseColumn;
 
+    @Column(name = "SIGN_TABLE_NAME")
+    private String signTableName;
+
+    @Column(name = "SIGN_COLUMN_NAME")
+    private String signColumnName;
+
     @Lob
     @Column(name = "SIGNED_DOCUMENT")
     private byte[] signedDocument;
@@ -52,6 +58,16 @@ public class SignedDocs implements Serializable {
     @Lob
     @Column(name = "REVOCATION_DOCUMENT")
     private byte[] revocationDocument;
+
+    public SignedDocs(String sourceTable, @NonNull Long signedUserId, Long sourceTableId, String documentHash, byte[] signedDocument, String whereClauseColumn, String signColumnName) {
+        this.sourceTable = sourceTable;
+        this.signedUserId = signedUserId;
+        this.sourceTableId = sourceTableId;
+        this.documentHash = documentHash;
+        this.signedDocument = signedDocument;
+        this.whereClauseColumn = whereClauseColumn;
+        this.signColumnName = signColumnName;
+    }
 
     public SignedDocs(String sourceTable, @NonNull Long signedUserId, Long sourceTableId, String documentHash, byte[] signedDocument, String whereClauseColumn) {
         this.sourceTable = sourceTable;
