@@ -1,0 +1,10 @@
+C:\Users\jquer\Downloads\versao\SyncStock.pdb
+C:\Users\jquer\Downloads\versao\SyncStock.config
+C:\Users\jquer\Downloads\versao\clrcompression.dll
+C:\Users\jquer\Downloads\versao\clrjit.dll
+C:\Users\jquer\Downloads\versao\coreclr.dll
+C:\Users\jquer\Downloads\versao\mscordaccore.dll
+C:\Users\jquer\Downloads\versao\sni.dll
+C:\Users\jquer\Downloads\versao\LibUtil.pdb
+C:\Users\jquer\Downloads\versao\ResUtil.pdb
+C:\Users\jquer\Downloads\versao\SyncStock.exe

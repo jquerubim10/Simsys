@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\jquer\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\jquer\\.nuget\\packages"
+    ]
+  }
+}

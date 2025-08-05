@@ -1,0 +1,58 @@
+Savemed.LibUtil: Biblioteca compartilhada de Serviços, Utilidades e Classes extendidas;
+Savemed.LibUtil.Validate
+Savemed.LibUtil.Extension
+Savemed.LibUtil.Extension
+Savemed.ResUtil: Encapsulamento de recursos e artefatos compartilhados entre projetos;
+Savemed.ResUtil.Icons
+Savemed.ResUtil.Messages
+Savemed.<Project>.Resources: Encapsulamento de recursos e artefatos compartilhados entre projetos do Save;
+Savemed.<Project>.Domain.Entities
+Savemed.<Project>.Domain.ValueObject
+Savemed.<Project>.Data
+Savemed.<Project>.Data.Dao
+Savemed.<Project>.Data.Repository
+
+Requisitos Savemed.SyncStoq
+OK->Ler arquivo de configuração;
+->Gerar arquivo de configuração quando não houver;
+OK->Acessar banco de dados;
+->Verificar os parâmetros;
+OK->Definir uma classe para representar as movimentações;
+OK->Aplicar padrão Repository
+OK->Coletar as movimentações pendentes;
+OK->Executar a rotina que vai atualizar as movimentações usando como parâmetro a data do último balanço;
+OK->Processar o saldo diário dos produtos a partir da data de referência dos itens que sofreram modificação;
+OK->Registrar o Histórico de Execução do Processo;
+->Encerrar execução;
+
+Requisitos Savemed.SelfTaskService
+ok->Origem Dos dados, baseado em um padrão. Definir Classe;
+   -A classe deve conter os atributos:
+      -Nome da tarefa
+      -Comando
+      -Argumentos
+      -Prioridade
+      -Intervalo
+      -Diretório de execução
+      -Lista Retorno com sucesso
+      -Lista Retorno com erro
+      -Tipo Contigencia: 
+         -Envio Email 
+         -Eventos Windows         
+         -Arquivo de log
+         -Registro em Banco
+->Possibilidades de Origem, ex: ArquivoConfiguração;
+ok->Varrer diretório informado no arquivo de configuração procurando por arquivos syncstok.task
+ok->Leitura da origem dos dados;
+ok->Definir um prazo para releitura da origem;
+ok->Execução dos processos com base na prioridade. 
+ok->Criar script para instalar serviço
+
+
+
+
+AppConfig
+=>LogType: Email{email-server, email-from, email-to }, LogFile{log-directory}, WindowsEvent{windows}, DataBase{}
+=>
+
+

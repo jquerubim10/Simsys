@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SyncStock": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

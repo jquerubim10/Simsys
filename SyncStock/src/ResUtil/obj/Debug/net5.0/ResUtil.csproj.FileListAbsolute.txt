@@ -1,0 +1,15 @@
+C:\M2\SyncStock\src\ResUtil\bin\Debug\net5.0\ResUtil.deps.json
+C:\M2\SyncStock\src\ResUtil\bin\Debug\net5.0\ResUtil.dll
+C:\M2\SyncStock\src\ResUtil\bin\Debug\net5.0\ref\ResUtil.dll
+C:\M2\SyncStock\src\ResUtil\bin\Debug\net5.0\ResUtil.pdb
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ResUtil.Icons.resources
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ResUtil.Messages.resources
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ResUtil.csproj.GenerateResource.cache
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ResUtil.GeneratedMSBuildEditorConfig.editorconfig
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ResUtil.AssemblyInfoInputs.cache
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ResUtil.AssemblyInfo.cs
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ResUtil.csproj.CoreCompileInputs.cache
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ResUtil.dll
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ref\ResUtil.dll
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ResUtil.pdb
+C:\M2\SyncStock\src\ResUtil\obj\Debug\net5.0\ResUtil.csproj.AssemblyReference.cache

@@ -1,0 +1,12 @@
+C:\M2\SyncStock\src\LibUtil\bin\Release\net5.0\LibUtil.deps.json
+C:\M2\SyncStock\src\LibUtil\bin\Release\net5.0\LibUtil.dll
+C:\M2\SyncStock\src\LibUtil\bin\Release\net5.0\ref\LibUtil.dll
+C:\M2\SyncStock\src\LibUtil\bin\Release\net5.0\LibUtil.pdb
+C:\M2\SyncStock\src\LibUtil\obj\Release\net5.0\LibUtil.GeneratedMSBuildEditorConfig.editorconfig
+C:\M2\SyncStock\src\LibUtil\obj\Release\net5.0\LibUtil.AssemblyInfoInputs.cache
+C:\M2\SyncStock\src\LibUtil\obj\Release\net5.0\LibUtil.AssemblyInfo.cs
+C:\M2\SyncStock\src\LibUtil\obj\Release\net5.0\LibUtil.csproj.CoreCompileInputs.cache
+C:\M2\SyncStock\src\LibUtil\obj\Release\net5.0\LibUtil.dll
+C:\M2\SyncStock\src\LibUtil\obj\Release\net5.0\ref\LibUtil.dll
+C:\M2\SyncStock\src\LibUtil\obj\Release\net5.0\LibUtil.pdb
+C:\M2\SyncStock\src\LibUtil\obj\Release\net5.0\LibUtil.csproj.AssemblyReference.cache
